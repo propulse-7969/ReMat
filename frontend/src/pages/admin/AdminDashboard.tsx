@@ -1,9 +1,13 @@
+import { useAuth } from "../../auth/useAuth";
 
+const AdminDashboard = () => {
+  const { profile } = useAuth();
 
-export default function AdminDashboard() {
-    return (
-        <div>
-            admin dashboard
-        </div>
-    )
-}
+  return (
+    <div>
+      <h1>Hello Admin {profile?.name} 👋</h1>
+    </div>
+  );
+};
+
+export default AdminDashboard;
