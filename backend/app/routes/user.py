@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models import user as user_model
@@ -7,10 +7,17 @@ from app.models import transaction as txn_model
 router = APIRouter(prefix="/user", tags=["User"])
 
 @router.get("/me")
-def get_user(user_id: str, db: Session=Depends(get_db)):
-    return db.query(user_model.User).filter_by(id=user_id).first()
+def get_me(user_id: str, db: Session = Depends(get_db)):
+    user = (
+        db.query(user_model.User)
+        .filter(user_model.User.id == user_id)
+        .first()
+    )
 
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
 
+    return user
 
 @router.get("/detect-waste")
 def detect_waste():
@@ -33,10 +40,18 @@ def get_transactions(user_id: str, db: Session = Depends(get_db)):
 
 @router.get("/leaderboard")
 def leaderboard(db: Session = Depends(get_db)):
-    return (
-        db.query(user_model.User.id, user_model.User.name, user_model.User.points)
+    results = (
+        db.query(user_model.User)
         .order_by(user_model.User.points.desc())
-        .limit(50)
+        .limit(10)
         .all()
     )
-
+    
+    return [
+        {
+            "id": user.id,
+            "name": user.name,
+            "points": user.points,
+        }
+        for user in results
+    ]

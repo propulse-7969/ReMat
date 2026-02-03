@@ -1,5 +1,6 @@
 from sqlalchemy import Column, String, Integer, DateTime
-from sqlalchemy.dialects.postgresql import UUID, Geography
+from sqlalchemy.dialects.postgresql import UUID
+from geoalchemy2 import Geography
 from sqlalchemy.sql import func
 from app.database import Base
 

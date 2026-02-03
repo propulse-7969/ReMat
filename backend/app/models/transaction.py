@@ -21,11 +21,7 @@ class Transaction(Base):
         nullable=False
     )
 
-    waste_type_id = Column(
-        UUID(as_uuid=True),
-        ForeignKey("waste_types.id", ondelete="RESTRICT"),
-        nullable=False
-    )
+    waste_type = Column(String, nullable=False) 
 
     confidence = Column(Numeric(5, 2), nullable=True)
     points_awarded = Column(Integer, nullable=False)
