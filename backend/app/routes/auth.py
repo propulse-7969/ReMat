@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.core.security import verify_firebase_token
+from app.core.config import ADMIN_EMAILS
 from app.database import get_db
 from app.models.user import User
 
@@ -25,12 +26,14 @@ def signup_user(payload: SignupPayload, decoded_token=Depends(verify_firebase_to
             status_code=status.HTTP_409_CONFLICT,
             detail="User already exists. Please login."
         )
+    
+    role = "admin" if email in ADMIN_EMAILS else "user"
 
     new_user = User(
         id=uid,
         name=name,
         email=email,
-        role="user",
+        role=role,
         points=0
     )
 

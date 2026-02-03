@@ -25,8 +25,9 @@ const Signup = () => {
     try {
       setLoading(true);
       await signup(name, email, password);
-      navigate("/user/dashboard");
-    } catch (err: unknown) {
+      navigate("/", {replace: true});
+    } 
+    catch (err: unknown) {
       const error = err as {code?: string, message?: string};
       // Backend sends this message when user already exists
       if (error.message?.toLowerCase().includes("exists")) {
@@ -44,8 +45,9 @@ const Signup = () => {
     try {
       setLoading(true);
       await signupWithGoogle();
-      navigate("/user/dashboard", {replace: true});
-    } catch (err: unknown) {
+      navigate("/", {replace: true});
+    } 
+    catch (err: unknown) {
       const error = err as {code?: string, message?: string};
 
       if(error.message==="Account exists") {

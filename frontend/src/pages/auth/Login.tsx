@@ -18,9 +18,11 @@ const Login = () => {
     try {
       setLoading(true);
       await login(email, password);
-      navigate("/user/dashboard");
-    } catch (err: unknown) {
+      navigate("/", {replace: true});
+    } 
+    catch (err: unknown) {
       const error = err as {code?: string, message?: string};
+
       if(error.message=="Firebase: Error (auth/invalid-credential).") {
         alert("Please sign up first")
         navigate("/auth/signup", {replace: true})
@@ -39,7 +41,7 @@ const Login = () => {
     try {
       setLoading(true);
       await loginWithGoogle();
-      navigate("/user/dashboard");
+      navigate("/", {replace: true});
     } 
     catch (err: unknown) {
       const error = err as {code?: string, message?: string};
@@ -49,11 +51,6 @@ const Login = () => {
         navigate("/auth/signup", {replace: true})
         return;
       }
-      // if(error.message=="Firebase: Error (auth/invalid-credential).") {
-      //   alert("Please sign up first")
-      //   navigate("/auth/signup", {replace: true})
-      //   return
-      // }
 
       setError(error.message || "Google login failed");
     } finally {

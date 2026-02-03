@@ -19,7 +19,7 @@ const ProtectedRoute = ({ children, role }: ProtectedRouteProps) => {
   if (role && !profile) return <div>Loading...</div>;
   
   if (role && profile?.role !== role) {
-    return <Navigate to="/unauthorized" replace />;
+    return <Navigate to="/" replace />;
   }
 
   return children;
