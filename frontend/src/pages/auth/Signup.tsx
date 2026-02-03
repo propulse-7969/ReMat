@@ -23,7 +23,7 @@ const Signup = () => {
 
     try {
       await signup(name, email, password);
-      navigate("/dashboard");
+      navigate("/user/dashboard");
     } catch (err: any) {
       setError(err.message);
     }

@@ -7,11 +7,17 @@ from app.models.user import User
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
+from pydantic import BaseModel
+
+class SignupPayload(BaseModel):
+    name: str
+
+
 @router.post("/signup")
-def signup_user(decoded_token=Depends(verify_firebase_token), db: Session=Depends(get_db)):
+def signup_user(payload: SignupPayload, decoded_token=Depends(verify_firebase_token), db: Session=Depends(get_db)):
     uid = decoded_token["uid"]
     email = decoded_token.get("email")
-    name = decoded_token.get("name", "User")
+    name = payload.name or "User"
 
     existing_user = db.query(User).filter(User.email == email).first()
     if existing_user:

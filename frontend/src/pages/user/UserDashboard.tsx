@@ -2,6 +2,7 @@ import { useAuth } from "../../auth/useAuth";
 
 const Dashboard = () => {
   const { profile } = useAuth();
+  console.log(profile)
 
   return (
     <div>

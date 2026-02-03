@@ -1,14 +1,6 @@
 import { useEffect, useState } from "react";
-import {
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  signInWithPopup,
-  signOut,
-  updateProfile,
-  type User,
-} from "firebase/auth";
-
+import { onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, signOut,
+  updateProfile, type User} from "firebase/auth";
 import { auth, googleProvider } from "../services/firebase";
 import { AuthContext } from "./AuthContext";
 import { type UserProfile } from "./types";
@@ -21,7 +13,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // 🔁 Runs on page refresh
+
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (firebaseUser) => {
       if (!firebaseUser) {
@@ -75,7 +67,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const signup = async (name: string, email: string, password: string) => {
     const cred = await createUserWithEmailAndPassword(auth, email, password);
 
-    // store name in Firebase profile (nice touch)
     await updateProfile(cred.user, { displayName: name });
 
     const idToken = await cred.user.getIdToken();
@@ -83,6 +74,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const res = await fetch(`${API_BASE}/auth/signup`, {
       method: "POST",
       headers: { Authorization: `Bearer ${idToken}` },
+      body: JSON.stringify({ name }),
     });
 
     if (!res.ok) {
@@ -95,13 +87,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const cred = await signInWithPopup(auth, googleProvider);
     const idToken = await cred.user.getIdToken();
 
-    // try login first
     let res = await fetch(`${API_BASE}/auth/login`, {
       method: "POST",
       headers: { Authorization: `Bearer ${idToken}` },
     });
 
-    // if not found → auto signup
+
     if (res.status === 404) {
       res = await fetch(`${API_BASE}/auth/signup`, {
         method: "POST",
