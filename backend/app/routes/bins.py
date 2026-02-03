@@ -44,3 +44,6 @@ def get_nearby_bins(
     }).mappings().all()
 
     return result
+
+
+TODO = "ADD INTERFACE DISPLAY OF THE BIN CORRESPONDING TO BIN ID"
