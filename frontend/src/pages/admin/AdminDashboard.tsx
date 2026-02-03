@@ -85,13 +85,18 @@ const AdminDashboard = () => {
         ➕ Add New Bin
       </button>
 
+      <button style={{ marginTop: 20, padding: "10px 20px", cursor: "pointer" }}
+        onClick={() => navigate("/admin/bins")}>
+        View All Bins
+      </button>
+
       {/* Map */}
       <h2 style={{ marginTop: 30 }}>Active Bins Map</h2>
 
       {loadingBins ? (
         <p>Loading bins on map…</p>
       ) : (
-        <MapView bins={activeBins} />
+        <MapView bins={activeBins} onMarkerClick={(bin) => navigate(`/admin/bins/${bin.id}`)} />
       )}
     </div>
   );
