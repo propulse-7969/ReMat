@@ -19,7 +19,7 @@ const getMarkerIcon = (status?: string, fillLevel?: number) => {
 
   if (status === "maintenance") color = "grey";
 
-  if (fillLevel !== undefined && fillLevel >= 90) color = "red";
+  if (fillLevel !== undefined && fillLevel >= 90 || status === "full") color = "red";
 
   return new L.Icon({
     iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-${color}.png`,

@@ -113,7 +113,8 @@ const BinDetails = () => {
           onChange={e => setBin({ ...bin, status: e.target.value })}
         >
           <option value="active">Active</option>
-          <option value="inactive">Inactive</option>
+          <option value="maintenance">Under Maintenance</option>
+          <option value="full">Full</option>
         </select>
 
         <label>Fill Level</label>
