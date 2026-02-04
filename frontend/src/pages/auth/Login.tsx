@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../auth/useAuth";
+import RoleRedirect from "../../app/RoleRedirect";
 
 const Login = () => {
   const { login, loginWithGoogle } = useAuth();
@@ -19,7 +20,7 @@ const Login = () => {
     try {
       setLoading(true);
       await login(email, password);
-      navigate("/user/dashboard", { replace: true }); //TEMPORARY FIX
+      navigate("/", { replace: true }); 
     } 
     catch (err: unknown) {
       const error = err as {code?: string, message?: string};
@@ -102,6 +103,7 @@ const Login = () => {
           Sign up
         </span>
       </p>
+      <RoleRedirect />
     </div>
   );
 };
