@@ -39,6 +39,7 @@ const ViewBins = () => {
 
   return (
     <div style={{ padding: "1.5rem" }}>
+      <button onClick={() => navigate("/admin/dashboard")}>Back to Dashboard</button>
       <h1>View All Bins</h1>
 
       {/* TABLE */}
