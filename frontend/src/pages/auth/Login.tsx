@@ -1,4 +1,5 @@
-import { FormEvent, useState } from "react";
+import { useState } from "react";
+import type { FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../auth/useAuth";
 
@@ -18,7 +19,7 @@ const Login = () => {
     try {
       setLoading(true);
       await login(email, password);
-      navigate("/", {replace: true});
+      navigate("/user/dashboard", { replace: true }); //TEMPORARY FIX
     } 
     catch (err: unknown) {
       const error = err as {code?: string, message?: string};

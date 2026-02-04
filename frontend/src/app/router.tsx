@@ -10,6 +10,13 @@ import Login from "../pages/auth/Login";
 import Signup from "../pages/auth/Signup";
 
 import UserDashboard from "../pages/user/UserDashboard";
+import UserProfile from "../pages/user/UserProfile";
+import UserRecycle from "../pages/user/UserRecycle";
+import UserRewards from "../pages/user/UserRewards";
+import UserTransactions from "../pages/user/UserTransactions";
+import UserLeaderboard from "../pages/user/UserLeaderboard";
+
+
 import AdminDashboard from "../pages/admin/AdminDashboard";
 import AddBin from "../pages/admin/bins/AddBin";
 import ViewBins from "../pages/admin/bins/ViewBins";
@@ -17,6 +24,7 @@ import ViewBins from "../pages/admin/bins/ViewBins";
 import Unauthorized from "../pages/Unauthorized";
 import RoleRedirect from "./RoleRedirect";
 import BinDetails from "../pages/admin/bins/BinDetails";
+
 
 
 export const router = createBrowserRouter([
@@ -37,14 +45,6 @@ export const router = createBrowserRouter([
         element: (
             <ProtectedRoute>
                 <RoleRedirect />
-            </ProtectedRoute>
-        )
-    },
-    {
-        path: "/user/dashboard",
-        element: (
-            <ProtectedRoute role="user">
-                <UserDashboard />
             </ProtectedRoute>
         )
     },
@@ -71,6 +71,11 @@ export const router = createBrowserRouter([
         children: [
             {path:"dashboard", element: <UserDashboard />},
             { index: true, element: <Navigate to="dashboard" replace /> },
+            {path:"profile", element: <UserProfile />},
+            {path:"recycle", element: <UserRecycle />},
+            {path:"rewards",element: <UserRewards />},
+            {path:"transactions", element: <UserTransactions />},
+            {path:"leaderboard",element: <UserLeaderboard />},
         ]
     },
     {
