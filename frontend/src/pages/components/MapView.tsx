@@ -15,12 +15,13 @@ interface MapClickHandlerProps {
 }
 
 
-const getMarkerIcon = (status?: string, fillLevel?: number) => {
+const getMarkerIcon = (status?: string, fillLevel?: number, isSelected?: boolean) => {
   let color = "green";
-
+  
   if (status === "maintenance") color = "grey";
-
   if (fillLevel !== undefined && fillLevel >= 90 || status === "full") color = "red";
+  if (isSelected) color = "blue"
+  if (status === "start") color = "orange"
 
   return new L.Icon({
     iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-${color}.png`,
@@ -65,7 +66,7 @@ interface MapViewProps {
 }
 
 export default function MapView({ bins = [], center = [25.26, 82.98], zoom = 13, height = "400px", onMarkerClick, 
-  onMapClick, routePath, showPopup = true}: MapViewProps) {
+  onMarkerSelect, onMapClick, routePath, selectedBinIds, showPopup = true}: MapViewProps) {
   return (
     <MapContainer
       center={center}
@@ -74,18 +75,21 @@ export default function MapView({ bins = [], center = [25.26, 82.98], zoom = 13,
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
 
       {onMapClick && <MapClickHandler onMapClick={onMapClick} />}
 
-      {bins.map((bin) => (
-        <Marker
+      {bins.map((bin) => {
+        const selected = selectedBinIds?.includes(bin.id.toString()) ?? false;
+        return (
+          <Marker
           key={bin.id}
           position={[bin.lat, bin.lng]}
-          icon={getMarkerIcon(bin.status, bin.fill_level)}
+          icon={getMarkerIcon(bin.status, bin.fill_level, selected)}
           eventHandlers={{
             click: () => {
+              if (bin.status === "start") return;
+              if (onMarkerSelect) onMarkerSelect(bin)
               if (onMarkerClick) onMarkerClick(bin);
             },
           }}
@@ -102,7 +106,8 @@ export default function MapView({ bins = [], center = [25.26, 82.98], zoom = 13,
             </Popup>
           )}
         </Marker>
-      ))}
+        )
+      })}
 
       {routePath && routePath.length > 1 && (
         <Polyline
