@@ -7,3 +7,10 @@ export interface Bin {
   fill_level?: number;
   capacity?: number;
 }
+
+
+export interface DetectionResult {
+  waste_type: string
+  confidence: number
+  estimated_value: number
+}

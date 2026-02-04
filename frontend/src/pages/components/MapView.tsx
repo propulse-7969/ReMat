@@ -17,7 +17,7 @@ interface MapClickHandlerProps {
 const getMarkerIcon = (status?: string, fillLevel?: number) => {
   let color = "green";
 
-  if (status === "inactive") color = "grey";
+  if (status === "maintenance") color = "grey";
 
   if (fillLevel !== undefined && fillLevel >= 90) color = "red";
 
@@ -50,11 +50,11 @@ const MapClickHandler = ({ onMapClick }: MapClickHandlerProps) => {
 
 
 interface MapViewProps {
-  bins?: Bin[]; 
+  bins?: Bin[];
   center?: [number, number];
   zoom?: number;
   height?: string;
-  onMarkerClick?: (bin: Bin) => void; 
+  onMarkerClick?: (bin: Bin) => void;
   onMapClick?: (coords: MapCoords) => void;
   showPopup?: boolean;
 }
@@ -91,6 +91,8 @@ export default function MapView({ bins = [], center = [25.26, 82.98], zoom = 13,
               Status: {bin.status || "N/A"}
               <br />
               Fill Level: {bin.fill_level ?? "N/A"}%
+              <br />
+              {bin.status == 'active' && <button>Get Directions!</button>} {/*TODO --> Add location fetching logic and user can then change the starting location and implement inbuild diktra*/}
             </Popup>
           )}
         </Marker>
