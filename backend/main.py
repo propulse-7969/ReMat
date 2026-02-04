@@ -15,12 +15,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-from app.routes import bins, auth, user, bin_panel
+from app.routes import bins, auth, user, bin_panel, routes
 
 app.include_router(bins.router)
 app.include_router(auth.router)
 app.include_router(user.router)
 app.include_router(bin_panel.router)
+app.include_router(routes.router)
 
 
 

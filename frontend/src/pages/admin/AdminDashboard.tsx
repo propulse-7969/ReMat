@@ -99,13 +99,16 @@ const AdminDashboard = () => {
 
       <button
         style={{ marginTop: 20 }}
-        onClick={() => navigate("/admin/bins/add")}
-      >
+        onClick={() => navigate("/admin/bins/add")}>
         ➕ Add New Bin
       </button>
 
       <button style={{ marginTop: 20 }} onClick={() => navigate("/admin/bins")}>
         View All Bins
+      </button>
+
+      <button style={{ marginTop: 20 }} onClick={() => navigate("/admin/route")}>
+        Create Pickup Route
       </button>
 
 

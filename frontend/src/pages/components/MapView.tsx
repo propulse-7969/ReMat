@@ -2,6 +2,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from "react-leaf
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { type Bin } from "../../types";
+import { Polyline } from "react-leaflet";
 
 
 export interface MapCoords {
@@ -57,9 +58,14 @@ interface MapViewProps {
   onMarkerClick?: (bin: Bin) => void;
   onMapClick?: (coords: MapCoords) => void;
   showPopup?: boolean;
+
+  selectedBinIds?: string[];
+  onMarkerSelect?: (bin: Bin) => void;
+  routePath?: { lat: number; lng: number }[];
 }
 
-export default function MapView({ bins = [], center = [25.26, 82.98], zoom = 13, height = "400px", onMarkerClick, onMapClick, showPopup = true}: MapViewProps) {
+export default function MapView({ bins = [], center = [25.26, 82.98], zoom = 13, height = "400px", onMarkerClick, 
+  onMapClick, routePath, showPopup = true}: MapViewProps) {
   return (
     <MapContainer
       center={center}
@@ -97,6 +103,12 @@ export default function MapView({ bins = [], center = [25.26, 82.98], zoom = 13,
           )}
         </Marker>
       ))}
+
+      {routePath && routePath.length > 1 && (
+        <Polyline
+          positions={routePath.map(p => [p.lat, p.lng])}
+        />
+      )}
     </MapContainer>
   );
 }
