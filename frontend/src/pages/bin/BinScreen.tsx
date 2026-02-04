@@ -42,9 +42,17 @@ const BinScreen = () => {
           <span className="bin-id">#{bin.id}</span>
         </header>
 
-        {/* <section className="bin-location">
-          📍 {bin.location}
-        </section> */}
+        <section className="bin-location">
+            <button
+                className="map-button"
+                onClick={() => {
+                const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${bin.lat},${bin.lng}`;
+                window.open(mapsUrl, "_blank");
+                }}
+            >
+                📍 Show on Map
+            </button>
+        </section>
 
         <section className="bin-fill">
           <p>Fill Level</p>

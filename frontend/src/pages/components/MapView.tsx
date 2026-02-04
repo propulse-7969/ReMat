@@ -102,7 +102,12 @@ export default function MapView({ bins = [], center = [25.26, 82.98], zoom = 13,
               <br />
               Fill Level: {bin.fill_level ?? "N/A"}%
               <br />
-              {bin.status == 'active' && <button>Get Directions!</button>} {/*TODO --> Add location fetching logic and user can then change the starting location and implement inbuild diktra*/}
+              {bin.status == 'active' && 
+              <button onClick={() => {
+                const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${bin.lat},${bin.lng}`;
+                window.open(mapsUrl, "_blank");
+                }}>
+                Get Directions!</button>}
             </Popup>
           )}
         </Marker>
