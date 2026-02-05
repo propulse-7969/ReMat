@@ -61,14 +61,20 @@ async def detect_waste(image: UploadFile = File(...)):
     finally:
         await image.close()
 
-@router.get("/transactions")
+
+@router.get("/transactions/{user_id}")
 def get_transactions(user_id: str, db: Session = Depends(get_db)):
-    return (
+    transactions = (
         db.query(txn_model.Transaction)
-        .filter_by(user_id=user_id)
+        .filter(txn_model.Transaction.user_id == user_id)
         .order_by(txn_model.Transaction.created_at.desc())
         .all()
     )
+
+    if not transactions:
+        return []
+
+    return transactions
 
 
 @router.get("/leaderboard")
