@@ -1,15 +1,26 @@
 from fastapi import APIRouter, Depends, HTTPException, File, UploadFile
 from sqlalchemy.orm import Session
 from pathlib import Path
+from pydantic import BaseModel
 from app.database import get_db
+from app.core.security import verify_firebase_token
 from app.models import user as user_model
 from app.models import transaction as txn_model
+from app.services.transaction_service import handle_deposit
 import os
 from datetime import datetime
 import shutil
 from app.services.waste_detector import predict_waste
 
 router = APIRouter(prefix="/user", tags=["User"])
+
+
+class RecyclePayload(BaseModel):
+    waste_type: str
+    base_points: int | None = None  # base points for the waste type (from detection)
+    estimated_value: int | None = None  # deprecated, use base_points
+    confidence: float | None = None
+    user_override: bool = False  # True if user manually selected type
 
 # Upload path relative to backend root (works regardless of cwd)
 _BACKEND_ROOT = Path(__file__).resolve().parent.parent.parent
@@ -61,6 +72,8 @@ async def detect_waste(image: UploadFile = File(...)):
         return {
             "waste_type": prediction_result["waste_type"],
             "confidence": prediction_result["confidence"],
+            "base_points": prediction_result["base_points"],
+            "points_to_earn": prediction_result["points_to_earn"],
             "estimated_value": prediction_result["estimated_value"],
             "image_path": filepath,
             "all_probabilities": prediction_result.get("all_probabilities", {})
@@ -119,5 +132,26 @@ def leaderboard(
     
 
 @router.put("/recycle/{binid}")
-def perform_transaction():
-    pass
+def perform_transaction(
+    binid: str,
+    payload: RecyclePayload,
+    decoded_token: dict = Depends(verify_firebase_token),
+    db: Session = Depends(get_db),
+):
+    user_id = decoded_token["uid"]
+
+    base_pts = payload.base_points if payload.base_points is not None else payload.estimated_value or 0
+    result = handle_deposit(
+        db=db,
+        user_id=user_id,
+        bin_id=binid,
+        waste_type=payload.waste_type,
+        base_points=base_pts,
+        confidence=payload.confidence,
+        user_override=payload.user_override,
+    )
+
+    if isinstance(result, dict) and "error" in result:
+        raise HTTPException(status_code=400, detail=result["error"])
+
+    return result

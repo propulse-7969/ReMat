@@ -12,5 +12,7 @@ export interface Bin {
 export interface DetectionResult {
   waste_type: string
   confidence: number
-  estimated_value: number
+  base_points: number
+  points_to_earn: number
+  estimated_value?: number  // deprecated, use base_points
 }

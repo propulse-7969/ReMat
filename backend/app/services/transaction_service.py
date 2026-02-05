@@ -1,23 +1,25 @@
 from app.models.transaction import Transaction
 from app.models.user import User
 from app.models.bin import Bin
+from app.services.waste_detector import calculate_points
 import uuid
 
-def handle_deposit(db, user_id, bin_id, waste_type, estimated_value):
+def handle_deposit(db, user_id, bin_id, waste_type, base_points, confidence=None, user_override=False):
     bin_obj = db.query(Bin).filter_by(id=bin_id).first()
 
     if bin_obj.status != "active":
         return {"error": "Bin unavailable"}
 
-    points = int(estimated_value / 3)
+    conf = float(confidence) if confidence is not None else 0.0
+    points = calculate_points(waste_type, conf, user_override)
 
     txn = Transaction(
-        id=str(uuid.uuid4()),
+        id=uuid.uuid4(),
         user_id=user_id,
         bin_id=bin_id,
         waste_type=waste_type,
-        estimated_value=estimated_value,
-        points_earned=points
+        confidence=confidence,
+        points_awarded=points
     )
 
     db.add(txn)

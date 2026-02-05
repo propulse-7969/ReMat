@@ -85,3 +85,14 @@ def get_current_user(decoded_token=Depends(verify_firebase_token), db: Session=D
         "role": user.role,
         "points": user.points
     }
+
+
+@router.delete("/me")
+def delete_account(decoded_token=Depends(verify_firebase_token), db: Session=Depends(get_db)):
+    uid = decoded_token["uid"]
+    user = db.query(User).filter(User.id == uid).first()
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+    db.delete(user)
+    db.commit()
+    return {"message": "Account deleted successfully"}

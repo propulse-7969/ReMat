@@ -51,6 +51,15 @@ const MapClickHandler = ({ onMapClick }: MapClickHandlerProps) => {
 };
 
 
+const userLocationIcon = new L.Icon({
+  iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png",
+  shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+});
+
 interface MapViewProps {
   bins?: Bin[];
   center?: [number, number];
@@ -59,14 +68,14 @@ interface MapViewProps {
   onMarkerClick?: (bin: Bin) => void;
   onMapClick?: (coords: MapCoords) => void;
   showPopup?: boolean;
-
+  userLocation?: { lat: number; lng: number };
   selectedBinIds?: string[];
   onMarkerSelect?: (bin: Bin) => void;
   routePath?: { lat: number; lng: number }[];
 }
 
 export default function MapView({ bins = [], center = [25.26, 82.98], zoom = 13, height = "400px", onMarkerClick, 
-  onMarkerSelect, onMapClick, routePath, selectedBinIds, showPopup = true}: MapViewProps) {
+  onMarkerSelect, onMapClick, routePath, selectedBinIds, showPopup = true, userLocation }: MapViewProps) {
   return (
     <MapContainer
       center={center}
@@ -78,6 +87,12 @@ export default function MapView({ bins = [], center = [25.26, 82.98], zoom = 13,
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
 
       {onMapClick && <MapClickHandler onMapClick={onMapClick} />}
+
+      {userLocation && (
+        <Marker position={[userLocation.lat, userLocation.lng]} icon={userLocationIcon}>
+          <Popup>You are here</Popup>
+        </Marker>
+      )}
 
       {bins.map((bin) => {
         const selected = selectedBinIds?.includes(bin.id.toString()) ?? false;

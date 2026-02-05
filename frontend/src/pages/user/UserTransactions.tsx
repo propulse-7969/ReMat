@@ -24,8 +24,9 @@ const Transactions = () => {
     const fetchTransactions = async () => {
       setLoading(true);
       try {
+        const API_BASE = (import.meta.env.VITE_API_BASE_URL as string) || "http://127.0.0.1:8000";
         const res = await fetch(
-          `${import.meta.env.VITE_API_BASE_URL}/user/transactions/${userId}?page=${page}&limit=${PAGE_SIZE}`
+          `${API_BASE}/user/transactions/${userId}?page=${page}&limit=${PAGE_SIZE}`
         );
 
         if (!res.ok) {

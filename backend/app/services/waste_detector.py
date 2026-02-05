@@ -9,6 +9,40 @@ from keras.applications.resnet import preprocess_input
 _BACKEND_ROOT = Path(__file__).resolve().parent.parent.parent
 _DEFAULT_MODEL_PATH = _BACKEND_ROOT / "Models" / "ewaste_final.keras"
 
+# Scoring: confidence thresholds
+HIGH_CONFIDENCE = 0.75
+LOW_CONFIDENCE = 0.40
+
+# Base points per waste type (used for Cases 1 & 2)
+BASE_POINTS = {
+    "Battery": 110,
+    "Keyboard": 36,
+    "Microwave": 270,
+    "Mobile": 150,
+    "Mouse": 27,
+    "PCB": 165,
+    "Player": 90,
+    "Printer": 200,
+    "Television": 330,
+    "Washing Machine": 400,
+    "Laptop": 180,
+}
+
+# Manual override caps (Case 3: confidence < 0.40 or user overrides ML)
+MANUAL_OVERRIDE_POINTS = {
+    "PCB": 90,
+    "Battery": 60,
+    "Mobile": 80,
+    "Player": 50,
+    "Mouse": 15,
+    "Keyboard": 20,
+    "Printer": 120,
+    "Microwave": 150,
+    "Television": 180,
+    "Washing Machine": 220,
+    "Laptop": 100,
+}
+
 
 class WasteDetector:
     def __init__(self, model_path=None):
@@ -89,30 +123,32 @@ class WasteDetector:
         except Exception as e:
             raise Exception(f"Prediction failed: {str(e)}")
     
-    def get_estimated_value(self, waste_type):
-        """
-        Get estimated value for a waste type.
-        
-        Args:
-            waste_type (str): The type of waste
-            
-        Returns:
-            int: Estimated value in currency units
-        """
-        value_mapping = {
-            "Battery": 50,
-            "Keyboard": 100,
-            "Microwave": 500,
-            "Mobile": 300,
-            "Mouse": 75,
-            "PCB": 200,
-            "Player": 150,
-            "Printer": 400,
-            "Television": 800,
-            "Washing Machine": 1200,
-            "Laptop": 600,
-        }
-        return value_mapping.get(waste_type, 0)
+    def get_base_points(self, waste_type):
+        """Get base points for a waste type (for Cases 1 & 2)."""
+        return BASE_POINTS.get(waste_type, 0)
+
+    def get_manual_override_points(self, waste_type):
+        """Get manual override cap for a waste type (Case 3)."""
+        return MANUAL_OVERRIDE_POINTS.get(waste_type, 50)
+
+
+def calculate_points(waste_type: str, confidence: float, user_override: bool = False) -> int:
+    """
+    Calculate points using confidence-based scoring logic.
+    
+    Case 1 (High Confidence): confidence >= 0.75 → points = base_points × confidence
+    Case 2 (Low Confidence): 0.40 <= confidence < 0.75 → points = base_points × 0.6
+    Case 3 (Manual): confidence < 0.40 or user_override → points = manual_override_cap
+    """
+    base = BASE_POINTS.get(waste_type, 0)
+    manual = MANUAL_OVERRIDE_POINTS.get(waste_type, 50)
+    
+    if user_override or confidence < LOW_CONFIDENCE:
+        return int(manual)
+    if confidence >= HIGH_CONFIDENCE:
+        return int(base * confidence)
+    # Case 2: 0.40 <= confidence < 0.75
+    return int(base * 0.6)
 
 
 # Create a singleton instance
@@ -139,14 +175,14 @@ def predict_waste(image_path, model_path=None):
     """
     Convenience function to predict waste type from an image.
     
-    Args:
-        image_path (str): Path to the image file
-        model_path (str): Path to the model file
-        
     Returns:
-        dict: Prediction results including waste_type, confidence, and estimated_value
+        dict: waste_type, confidence, base_points, points_to_earn, all_probabilities
     """
     detector = get_waste_detector(model_path)
     result = detector.predict(image_path)
-    result["estimated_value"] = detector.get_estimated_value(result["waste_type"])
+    waste_type = result["waste_type"]
+    confidence = result["confidence"]
+    result["base_points"] = detector.get_base_points(waste_type)
+    result["points_to_earn"] = calculate_points(waste_type, confidence)
+    result["estimated_value"] = result["base_points"]  # kept for backward compatibility
     return result
