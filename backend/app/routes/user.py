@@ -63,29 +63,36 @@ async def detect_waste(image: UploadFile = File(...)):
 
 
 @router.get("/transactions/{user_id}")
-def get_transactions(user_id: str, db: Session = Depends(get_db)):
+def get_transactions(user_id: str, page: int=1, limit: int=10,  db: Session = Depends(get_db)):
+    offset = (page-1)*limit
     transactions = (
         db.query(txn_model.Transaction)
         .filter(txn_model.Transaction.user_id == user_id)
         .order_by(txn_model.Transaction.created_at.desc())
+        .offset(offset)
+        .limit(limit)
         .all()
     )
-
-    if not transactions:
-        return []
 
     return transactions
 
 
 @router.get("/leaderboard")
-def leaderboard(db: Session = Depends(get_db)):
+def leaderboard(
+    page: int = 1,
+    limit: int = 10,
+    db: Session = Depends(get_db)
+):
+    offset = (page - 1) * limit
+
     results = (
         db.query(user_model.User)
         .order_by(user_model.User.points.desc())
-        .limit(10)
+        .offset(offset)
+        .limit(limit)
         .all()
     )
-    
+
     return [
         {
             "id": user.id,
