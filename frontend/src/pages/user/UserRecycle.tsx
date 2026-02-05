@@ -2,7 +2,9 @@ import CameraCapture from "../components/CameraCapture"
 import { useState } from "react"
 import MapView from "../components/MapView"
 import type { Bin, DetectionResult } from "../../types"
-
+import QRScanner from "../components/QRScanner"
+import { useNavigate } from "react-router-dom"
+import { extractBinIdFromQR } from "../utils/getBinfromQR"
 
 const UserRecycle = () => {
   const [display, setDisplay] = useState<boolean>(false)
@@ -10,6 +12,7 @@ const UserRecycle = () => {
   const [loading, setLoading] = useState<boolean>(false)
   const [bins, setBins] = useState<Bin[]>([])
   const [mapCenter, setMapCenter] = useState<[number, number] | undefined>(undefined)
+  const navigate=useNavigate();
 
   const API_BASE = (import.meta.env.VITE_API_URL as string) ?? "http://127.0.0.1:8000"
 
@@ -63,6 +66,10 @@ const UserRecycle = () => {
     }
   }
 
+  const qrclickHander = () =>{
+
+  }
+
   return (
     <div>
       <CameraCapture onCapture={handleCapture} facingMode="environment" />
@@ -75,6 +82,21 @@ const UserRecycle = () => {
           <p>Waste Type: {result.waste_type}</p>
           <p>Confidence: {(result.confidence * 100).toFixed(1)}%</p>
           <p>Estimated Value: {result.estimated_value}</p>
+          <button onClick={qrclickHander}>SCAN QR CODE NIGGA!</button>
+          <QRScanner
+            onScanSuccess={(decodedText) => {
+              const binId = extractBinIdFromQR(decodedText);
+
+              if (!binId) {
+                alert("Invalid QR Code");
+                return;
+              }
+
+              navigate(`/user/recycle/${binId}`);
+            }}
+          />
+
+
         </div>
       )}
 

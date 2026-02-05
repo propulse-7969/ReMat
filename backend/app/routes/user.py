@@ -101,3 +101,8 @@ def leaderboard(
         }
         for user in results
     ]
+    
+
+@router.put("/recycle/{binid}")
+def perform_transaction():
+    pass
