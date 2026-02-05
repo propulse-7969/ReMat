@@ -3,8 +3,11 @@ import { useEffect, useState } from "react";
 import QRCode from "react-qr-code";
 import "./BinScreen.css";
 import type { Bin } from "../../types";
+import { useRef } from "react";
 
 const BinScreen = () => {
+  const qrRef = useRef<HTMLDivElement>(null);
+
   const { binId } = useParams();
   const [bin, setBin] = useState<Bin>();
   const [loading, setLoading] = useState(true);
@@ -33,6 +36,26 @@ const BinScreen = () => {
   const fillPercent = Math.round(
     ((bin.fill_level ?? 0) / (bin.capacity ?? 1)) * 100
   );
+
+  // const downloadSVG = () => {
+  //   if (!qrRef.current) return;
+
+  //   const svg = qrRef.current.querySelector("svg");
+  //   if (!svg) return;
+
+  //   const serializer = new XMLSerializer();
+  //   const source = serializer.serializeToString(svg);
+
+  //   const blob = new Blob([source], { type: "image/svg+xml;charset=utf-8" });
+  //   const url = URL.createObjectURL(blob);
+
+  //   const link = document.createElement("a");
+  //   link.href = url;
+  //   link.download = `bin-${bin.id}-qr.svg`;
+  //   link.click();
+
+  //   URL.revokeObjectURL(url);
+  // };
 
   return (
     <div className="bin-wrapper">
@@ -75,13 +98,18 @@ const BinScreen = () => {
         </section> */}
 
         <section className="bin-qr">
-          <QRCode
-            value={`${bin.id}`}
-            size={160}
-            bgColor="#020617"
-            fgColor="#ffffff"
-          />
-          <p>Scan to Recycle</p>
+          <div ref={qrRef}>
+            <QRCode
+              value={`${bin.id}`}
+              size={256}
+              bgColor="#ffffff"
+              fgColor="#000000"
+            />
+          </div>
+
+          {/* <button onClick={downloadSVG}>
+            ⬇ Download QR (SVG)
+          </button> */}
         </section>
 
         <footer className="bin-footer">

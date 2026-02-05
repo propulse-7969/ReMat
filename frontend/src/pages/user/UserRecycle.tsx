@@ -4,7 +4,7 @@ import MapView from "../components/MapView"
 import type { Bin, DetectionResult } from "../../types"
 import QRScanner from "../components/QRScanner"
 import { useNavigate } from "react-router-dom"
-import { extractBinIdFromQR } from "../utils/getBinfromQR"
+//import { extractBinIdFromQR } from "../utils/getBinfromQR"
 
 const UserRecycle = () => {
   const [display, setDisplay] = useState<boolean>(false)
@@ -85,14 +85,14 @@ const UserRecycle = () => {
           <button onClick={qrclickHander}>SCAN QR CODE NIGGA!</button>
           <QRScanner
             onScanSuccess={(decodedText) => {
-              const binId = extractBinIdFromQR(decodedText);
+              const binId = (decodedText);
 
               if (!binId) {
                 alert("Invalid QR Code");
                 return;
               }
-
-              navigate(`/user/recycle/${binId}`);
+              console.log(binId);
+              //navigate(`/user/recycle/${binId}`);
             }}
           />
 
