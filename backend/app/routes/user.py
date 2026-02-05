@@ -1,15 +1,19 @@
 from fastapi import APIRouter, Depends, HTTPException, File, UploadFile
 from sqlalchemy.orm import Session
+from pathlib import Path
 from app.database import get_db
 from app.models import user as user_model
 from app.models import transaction as txn_model
 import os
 from datetime import datetime
 import shutil
+from app.services.waste_detector import predict_waste
 
 router = APIRouter(prefix="/user", tags=["User"])
 
-UPLOAD_FOLDER = 'uploads/waste_images'
+# Upload path relative to backend root (works regardless of cwd)
+_BACKEND_ROOT = Path(__file__).resolve().parent.parent.parent
+UPLOAD_FOLDER = str(_BACKEND_ROOT / "uploads" / "waste_images")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 @router.get("/me")
@@ -31,7 +35,12 @@ async def detect_waste(image: UploadFile = File(...)):
     file_extension = image.filename.split('.')[-1].lower() if image.filename else ''
     
     if file_extension not in allowed_extensions:
-        raise HTTPException(status_code=400, detail="Invalid file type. Allowed: png, jpg, jpeg, gif, webp")
+        raise HTTPException(
+            status_code=400, 
+            detail="Invalid file type. Allowed: png, jpg, jpeg, gif, webp"
+        )
+    
+    filepath = None
     
     try:
         # Generate unique filename
@@ -39,28 +48,34 @@ async def detect_waste(image: UploadFile = File(...)):
         filename = f"waste_{timestamp}.{file_extension}"
         filepath = os.path.join(UPLOAD_FOLDER, filename)
         
+        # Ensure upload directory exists
+        os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+        
         # Save uploaded file
         with open(filepath, "wb") as buffer:
             shutil.copyfileobj(image.file, buffer)
         
-        # TODO -> IMPLEMENT MODEL and RETURN PREDICTED VALUE
-        # You can now use 'filepath' to load the image for your model
-        # Example: from PIL import Image
-        #          img = Image.open(filepath)
-        #          prediction = model.predict(img)
+        # Predict using the model
+        prediction_result = predict_waste(filepath)
         
         return {
-            "waste_type": "100% Certified Nigga",
-            "confidence": 0.99,
-            "estimated_value": 1000000,
-            "image_path": filepath
+            "waste_type": prediction_result["waste_type"],
+            "confidence": prediction_result["confidence"],
+            "estimated_value": prediction_result["estimated_value"],
+            "image_path": filepath,
+            "all_probabilities": prediction_result.get("all_probabilities", {})
         }
         
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to process image: {str(e)}")
+        # Clean up the uploaded file if something goes wrong
+        if filepath and os.path.exists(filepath):
+            os.remove(filepath)
+        raise HTTPException(
+            status_code=500, 
+            detail=f"Failed to process image: {str(e)}"
+        )
     finally:
         await image.close()
-
 
 @router.get("/transactions/{user_id}")
 def get_transactions(user_id: str, page: int=1, limit: int=10,  db: Session = Depends(get_db)):

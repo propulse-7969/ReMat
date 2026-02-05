@@ -1,5 +1,5 @@
 import CameraCapture from "../components/CameraCapture"
-import { useState } from "react"
+import { useRef, useState } from "react"
 import MapView from "../components/MapView"
 import type { Bin, DetectionResult } from "../../types"
 import QRScanner from "../components/QRScanner"
@@ -70,9 +70,38 @@ const UserRecycle = () => {
 
   }
 
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file && file.type.startsWith("image/")) {
+      handleCapture(file)
+    }
+    e.target.value = ""
+  }
+
   return (
     <div>
-      <CameraCapture onCapture={handleCapture} facingMode="environment" />
+      <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 16 }}>
+        <CameraCapture onCapture={handleCapture} facingMode="environment" />
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <span style={{ marginRight: 8 }}>or</span>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/png,image/jpeg,image/jpg,image/gif,image/webp"
+            onChange={handleFileChange}
+            style={{ display: "none" }}
+          />
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={loading}
+          >
+            Upload Photo
+          </button>
+        </div>
+      </div>
 
       {loading && <p>Analyzing waste...</p>}
 
