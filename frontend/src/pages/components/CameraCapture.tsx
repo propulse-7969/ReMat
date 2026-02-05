@@ -17,10 +17,7 @@ export default function CameraCapture({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [stream, setStream] = useState<MediaStream | null>(null);
 
-  useEffect(() => {
-    startCamera();
-    return stopCamera;
-  }, []);
+
 
   const startCamera = async () => {
     try {
@@ -39,6 +36,11 @@ export default function CameraCapture({
   const stopCamera = () => {
     stream?.getTracks().forEach(track => track.stop());
   };
+
+    useEffect(() => {
+      startCamera();
+      return stopCamera;
+    }, []);
 
   const capture = () => {
     const video = videoRef.current;

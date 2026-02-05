@@ -2,6 +2,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from "react-leaf
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { type Bin } from "../../types";
+import { Polyline } from "react-leaflet";
 
 
 export interface MapCoords {
@@ -14,12 +15,13 @@ interface MapClickHandlerProps {
 }
 
 
-const getMarkerIcon = (status?: string, fillLevel?: number) => {
+const getMarkerIcon = (status?: string, fillLevel?: number, isSelected?: boolean) => {
   let color = "green";
-
+  
   if (status === "maintenance") color = "grey";
-
-  if (fillLevel !== undefined && fillLevel >= 90) color = "red";
+  if (fillLevel !== undefined && fillLevel >= 90 || status === "full") color = "red";
+  if (isSelected) color = "blue"
+  if (status === "start") color = "orange"
 
   return new L.Icon({
     iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-${color}.png`,
@@ -57,9 +59,14 @@ interface MapViewProps {
   onMarkerClick?: (bin: Bin) => void;
   onMapClick?: (coords: MapCoords) => void;
   showPopup?: boolean;
+
+  selectedBinIds?: string[];
+  onMarkerSelect?: (bin: Bin) => void;
+  routePath?: { lat: number; lng: number }[];
 }
 
-export default function MapView({ bins = [], center = [25.26, 82.98], zoom = 13, height = "400px", onMarkerClick, onMapClick, showPopup = true}: MapViewProps) {
+export default function MapView({ bins = [], center = [25.26, 82.98], zoom = 13, height = "400px", onMarkerClick, 
+  onMarkerSelect, onMapClick, routePath, selectedBinIds, showPopup = true}: MapViewProps) {
   return (
     <MapContainer
       center={center}
@@ -68,18 +75,21 @@ export default function MapView({ bins = [], center = [25.26, 82.98], zoom = 13,
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
 
       {onMapClick && <MapClickHandler onMapClick={onMapClick} />}
 
-      {bins.map((bin) => (
-        <Marker
+      {bins.map((bin) => {
+        const selected = selectedBinIds?.includes(bin.id.toString()) ?? false;
+        return (
+          <Marker
           key={bin.id}
           position={[bin.lat, bin.lng]}
-          icon={getMarkerIcon(bin.status, bin.fill_level)}
+          icon={getMarkerIcon(bin.status, bin.fill_level, selected)}
           eventHandlers={{
             click: () => {
+              if (bin.status === "start") return;
+              if (onMarkerSelect) onMarkerSelect(bin)
               if (onMarkerClick) onMarkerClick(bin);
             },
           }}
@@ -92,11 +102,23 @@ export default function MapView({ bins = [], center = [25.26, 82.98], zoom = 13,
               <br />
               Fill Level: {bin.fill_level ?? "N/A"}%
               <br />
-              {bin.status == 'active' && <button>Get Directions!</button>} {/*TODO --> Add location fetching logic and user can then change the starting location and implement inbuild diktra*/}
+              {bin.status == 'active' && 
+              <button onClick={() => {
+                const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${bin.lat},${bin.lng}`;
+                window.open(mapsUrl, "_blank");
+                }}>
+                Get Directions!</button>}
             </Popup>
           )}
         </Marker>
-      ))}
+        )
+      })}
+
+      {routePath && routePath.length > 1 && (
+        <Polyline
+          positions={routePath.map(p => [p.lat, p.lng])}
+        />
+      )}
     </MapContainer>
   );
 }

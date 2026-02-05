@@ -24,6 +24,8 @@ import ViewBins from "../pages/admin/bins/ViewBins";
 import Unauthorized from "../pages/Unauthorized";
 import RoleRedirect from "./RoleRedirect";
 import BinDetails from "../pages/admin/bins/BinDetails";
+import PickupRoute from "../pages/admin/bins/PickupRoute";
+import BinScreen from "../pages/bin/BinScreen";
 
 
 
@@ -49,17 +51,13 @@ export const router = createBrowserRouter([
         )
     },
     {
-        path: "/admin/dashboard",
-        element: (
-            <ProtectedRoute role="admin">
-                <AdminDashboard />
-            </ProtectedRoute>
-        )
-    },
-    {
         path: "/unauthorized",
         element: <Unauthorized />
 
+    },
+    {
+        path: "/bin/:binId",
+        element: <BinScreen />
     },
     {
         path: "/user",
@@ -90,6 +88,7 @@ export const router = createBrowserRouter([
             {path: "bins/add", element: <AddBin />},
             {path: "bins", element: <ViewBins />},
             {path: "bins/:binId", element: <BinDetails />},
+            {path: "route", element: <PickupRoute />},
             { index: true, element: <Navigate to="dashboard" replace /> },
         ]
     }
