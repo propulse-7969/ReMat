@@ -56,7 +56,7 @@ const UserLeaderboard = () => {
     <div className="p-6 max-w-3xl mx-auto">
       <h2 className="text-2xl font-semibold mb-6">Leaderboard</h2>
 
-      {/* 🥇🥈🥉 Podium */}
+
       {page === 1 && (users?.length ?? 0) >= 3 && (
         <div className="grid grid-cols-3 gap-4 mb-8">
           {users?.slice(0, 3).map((user, idx) => (
@@ -74,7 +74,7 @@ const UserLeaderboard = () => {
         </div>
       )}
 
-      {/* 📋 Leaderboard List */}
+  
       <div className="overflow-x-auto">
         <table className="w-full border-collapse">
           <thead>
@@ -114,7 +114,7 @@ const UserLeaderboard = () => {
         </table>
       </div>
 
-      {/* Pagination */}
+
       <div className="flex justify-between items-center mt-6">
         <button
           onClick={() => setPage((p) => Math.max(p - 1, 1))}
