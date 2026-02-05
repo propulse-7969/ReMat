@@ -1,80 +1,82 @@
-import { Html5Qrcode } from "html5-qrcode";
-import { useRef, useState } from "react";
+import QrScanner from "qr-scanner";
+import { useEffect, useRef, useState } from "react";
 
 type Props = {
   onScanSuccess: (text: string) => void;
 };
 
 export default function QRScanner({ onScanSuccess }: Props) {
-  const qrRef = useRef<Html5Qrcode | null>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const scannerRef = useRef<QrScanner | null>(null);
   const [isScanning, setIsScanning] = useState(false);
 
+  // --- START CAMERA SCAN (user controlled) ---
   const startScan = async () => {
-    if (isScanning) return;
+    if (!videoRef.current || isScanning) return;
 
-    qrRef.current = new Html5Qrcode("qr-reader");
+    const scanner = new QrScanner(
+      videoRef.current,
+      (result) => {
+        onScanSuccess(result.data);
+        stopScan();
+      },
+      {
+        preferredCamera: "environment",
+        highlightScanRegion: true,
+        highlightCodeOutline: true
+      }
+    );
+
+    scannerRef.current = scanner;
     setIsScanning(true);
 
     try {
-      await qrRef.current.start(
-        { facingMode: "environment" },
-        { fps: 10, qrbox: 250 },
-        (decodedText) => {
-          onScanSuccess(decodedText);
-          stopScan();
-        },
-        () => {}
-      );
+      await scanner.start();
     } catch (err) {
-      console.error("Failed to start scanner", err);
+      console.error("Camera start failed", err);
       setIsScanning(false);
     }
   };
 
-  const stopScan = async () => {
-    if (!qrRef.current) return;
-
-    try {
-      if (qrRef.current.isScanning) {
-        await qrRef.current.stop();
-      }
-      await qrRef.current.clear();
-    } catch {}
-    finally {
-      qrRef.current = null;
-      setIsScanning(false);
+  // --- STOP CAMERA SCAN ---
+  const stopScan = () => {
+    if (scannerRef.current) {
+      scannerRef.current.stop();
+      scannerRef.current.destroy();
+      scannerRef.current = null;
     }
+    setIsScanning(false);
   };
 
+  // --- FILE UPLOAD SCAN ---
   const scanFromFile = async (file: File) => {
-    // Clean up any existing instance first
-    if (qrRef.current) {
-      try {
-        if (qrRef.current.isScanning) {
-          await qrRef.current.stop();
-        }
-        await qrRef.current.clear();
-      } catch {}
-    }
-
-    const html5QrCode = new Html5Qrcode("qr-reader");
-
     try {
-      const decodedText = await html5QrCode.scanFile(file, true);
-      onScanSuccess(decodedText);
+      const result = await QrScanner.scanImage(file, {
+        returnDetailedScanResult: true
+      });
+      onScanSuccess(result.data);
     } catch (err) {
-      console.error("QR scan error:", err);
+      console.error("QR scan failed", err);
       alert("No QR code found in image");
-    } finally {
-      try {
-        await html5QrCode.clear();
-      } catch {}
     }
   };
+
+  // --- CLEANUP ON UNMOUNT ---
+  useEffect(() => {
+    return () => stopScan();
+  }, []);
 
   return (
     <div>
-      <div id="qr-reader" />
+      {/* Video preview (hidden until scanning) */}
+      <video
+        ref={videoRef}
+        style={{
+          width: "100%",
+          maxWidth: 320,
+          display: isScanning ? "block" : "none"
+        }}
+      />
 
       {!isScanning ? (
         <>
@@ -88,7 +90,7 @@ export default function QRScanner({ onScanSuccess }: Props) {
               onChange={(e) => {
                 const file = e.target.files?.[0];
                 if (file) scanFromFile(file);
-                e.target.value = ""; 
+                e.target.value = "";
               }}
             />
             <span style={{ cursor: "pointer", color: "blue" }}>
