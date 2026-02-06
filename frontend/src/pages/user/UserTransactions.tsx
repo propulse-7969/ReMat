@@ -105,7 +105,7 @@ const Transactions = () => {
   if (transactions.length === 0 && page === 1) {
     return (
       <div className="min-h-screen pb-0">
-        <div className="max-w-350 mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
           {/* Header */}
           <div className="mb-8">
             <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl shadow-black/20 overflow-hidden">
@@ -138,7 +138,7 @@ const Transactions = () => {
 
   return (
     <div className="min-h-screen pb-0">
-      <div className="max-w-350 mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
         {/* Header Section */}
         <div className="mb-8">
           <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl shadow-black/20 overflow-hidden">
@@ -151,9 +151,9 @@ const Transactions = () => {
                   <p className="text-base text-white/60">Track your recycling history and points earned</p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="px-6 py-4 bg-linear-to-br from-green-500/20 to-green-600/10 border border-green-500/30 rounded-xl backdrop-blur-sm">
-                    <p className="text-xs text-green-300/80 uppercase tracking-wider font-semibold mb-1">Page Points</p>
-                    <p className="text-3xl font-bold text-green-400">+{totalPoints}</p>
+                  <div className="px-6 py-4 bg-gradient-to-br from-green-500/20 to-green-600/10 border border-green-500/30 rounded-xl backdrop-blur-sm">
+                    <p className="text-xs text-green-300/80 uppercase tracking-wider font-semibold mb-1">All Time</p>
+                    <p className="text-3xl font-bold text-green-400">+{pointsAllTime}</p>
                   </div>
                 </div>
               </div>
@@ -163,8 +163,8 @@ const Transactions = () => {
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-8">
-          {/* Total Transactions */}
-          <SpotlightCard className="bg-linear-to-br from-blue-500/10 to-blue-600/5 backdrop-blur-xl border border-blue-500/20 rounded-xl p-6 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300 group">
+          {/* This Week */}
+          <SpotlightCard className="bg-gradient-to-br from-blue-500/10 to-blue-600/5 backdrop-blur-xl border border-blue-500/20 rounded-xl p-6 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300 group">
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 bg-blue-500/20 rounded-lg group-hover:scale-110 transition-transform duration-300">
                 <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -177,8 +177,8 @@ const Transactions = () => {
             <p className="text-3xl font-bold text-white">+{pointsThisWeek}</p>
           </SpotlightCard>
 
-          {/* Points Earned */}
-          <SpotlightCard className="bg-linear-to-br from-green-500/10 to-green-600/5 backdrop-blur-xl border border-green-500/20 rounded-xl p-6 hover:shadow-xl hover:shadow-green-500/10 transition-all duration-300 group">
+          {/* This Month */}
+          <SpotlightCard className="bg-gradient-to-br from-green-500/10 to-green-600/5 backdrop-blur-xl border border-green-500/20 rounded-xl p-6 hover:shadow-xl hover:shadow-green-500/10 transition-all duration-300 group">
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 bg-green-500/20 rounded-lg group-hover:scale-110 transition-transform duration-300">
                 <svg className="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -190,8 +190,8 @@ const Transactions = () => {
             <p className="text-3xl font-bold text-white">+{pointsThisMonth}</p>
           </SpotlightCard>
 
-          {/* Current Page */}
-          <SpotlightCard className="bg-linear-to-br from-purple-500/10 to-purple-600/5 backdrop-blur-xl border border-purple-500/20 rounded-xl p-6 hover:shadow-xl hover:shadow-purple-500/10 transition-all duration-300 group">
+          {/* All Time */}
+          <SpotlightCard className="bg-gradient-to-br from-purple-500/10 to-purple-600/5 backdrop-blur-xl border border-purple-500/20 rounded-xl p-6 hover:shadow-xl hover:shadow-purple-500/10 transition-all duration-300 group">
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 bg-purple-500/20 rounded-lg group-hover:scale-110 transition-transform duration-300">
                 <svg className="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -223,7 +223,7 @@ const Transactions = () => {
                   {/* Left Section */}
                   <div className="flex items-start gap-4">
                     {/* Number Badge */}
-                    <div className="shrink-0 w-10 h-10 bg-linear-to-br from-blue-500/20 to-blue-600/10 border border-blue-500/30 rounded-lg flex items-center justify-center">
+                    <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-blue-500/20 to-blue-600/10 border border-blue-500/30 rounded-lg flex items-center justify-center">
                       <span className="text-blue-400 font-bold text-sm">#{(page - 1) * PAGE_SIZE + index + 1}</span>
                     </div>
                     
@@ -257,7 +257,7 @@ const Transactions = () => {
                   </div>
 
                   {/* Points Badge */}
-                  <div className="shrink-0 px-5 py-3 bg-linear-to-br from-green-500/20 to-green-600/10 border border-green-500/30 rounded-lg group-hover:scale-105 transition-transform duration-300">
+                  <div className="flex-shrink-0 px-5 py-3 bg-gradient-to-br from-green-500/20 to-green-600/10 border border-green-500/30 rounded-lg group-hover:scale-105 transition-transform duration-300">
                     <p className="text-xs text-green-300/80 uppercase tracking-wider font-semibold mb-0.5">Points</p>
                     <p className="text-2xl font-bold text-green-400">+{txn.points_awarded}</p>
                   </div>
@@ -281,7 +281,7 @@ const Transactions = () => {
               Previous
             </button>
 
-            <div className="px-6 py-3 bg-linear-to-br from-purple-500/20 to-purple-600/10 border border-purple-500/30 rounded-lg">
+            <div className="px-6 py-3 bg-gradient-to-br from-purple-500/20 to-purple-600/10 border border-purple-500/30 rounded-lg">
               <span className="text-white/60 text-sm font-medium">Page </span>
               <span className="text-white font-bold text-lg">{page}</span>
             </div>
