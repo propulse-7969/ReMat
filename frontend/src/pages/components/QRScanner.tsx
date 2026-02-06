@@ -13,12 +13,14 @@ export default function QRScanner({ onScanSuccess }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [scanned, setScanned] = useState(false);
+  const [showScanner, setShowScanner] = useState(false);
 
 
   const startScan = async () => {
     if (!videoRef.current || isScanning) return;
 
     setError(null);
+    setShowScanner(true);
     const scanner = new QrScanner(
       videoRef.current,
       (result) => {
@@ -67,10 +69,12 @@ export default function QRScanner({ onScanSuccess }: Props) {
     try {
       setError(null);
       setIsProcessing(true);
+      setShowScanner(true);
       const result = await QrScanner.scanImage(file, {
         returnDetailedScanResult: true
       });
       onScanSuccess(result.data);
+      setScanned(true);
     } catch (err) {
       console.error("QR scan failed", err);
       setError("No QR code found in image");
@@ -84,9 +88,31 @@ export default function QRScanner({ onScanSuccess }: Props) {
     return () => stopScan();
   }, []);
 
-  return (
+  // If already scanned successfully, don't show anything
+  if (scanned) return null;
 
-    scanned ? null : (
+  // If scanner not initiated yet, show button
+  if (!showScanner) {
+    return (
+      <div className="w-full">
+        <button
+          type="button"
+          onClick={() => {
+            console.log("Scan QR Code button clicked");
+            startScan();
+          }}
+          className="w-full py-4 px-6 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-blue-500/30 hover:shadow-xl transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-3"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+          </svg>
+          Scan QR Code
+        </button>
+      </div>
+    );
+  }
+
+  return (
     <div className="w-full max-w-2xl mx-auto">
       <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden shadow-2xl shadow-black/20">
         {/* Video Preview Container */}
@@ -153,9 +179,9 @@ export default function QRScanner({ onScanSuccess }: Props) {
                   <div className="absolute inset-0 flex items-center">
                     <div className="w-full border-t border-white/10"></div>
                   </div>
-                  {/* <div className="relative flex justify-center text-sm">
+                  <div className="relative flex justify-center text-sm">
                     <span className="px-2 bg-white/5 text-white/50">or</span>
-                  </div> */}
+                  </div>
                 </div>
 
                 <label className="block cursor-pointer">
@@ -172,7 +198,7 @@ export default function QRScanner({ onScanSuccess }: Props) {
                   />
                   <div className="w-full py-3 px-4 bg-white/5 hover:bg-white/10 border border-white/20 text-white font-semibold rounded-lg transition-all duration-200 flex items-center justify-center gap-2">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
                     Upload QR Image
                   </div>
@@ -209,6 +235,5 @@ export default function QRScanner({ onScanSuccess }: Props) {
         </div>
       </div>
     </div>
-    )
   );
 }
