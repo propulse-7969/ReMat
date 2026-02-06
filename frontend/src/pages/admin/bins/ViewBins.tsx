@@ -215,14 +215,14 @@ const ViewBins = () => {
                   </div>
                 ) : (
                   <table className="w-full">
-                    <thead className="sticky top-0 z-10">
-                      <tr className="bg-white/5 border-b border-white/10">
-                        <th className="px-6 py-4 text-left text-xs font-semibold text-white/70 uppercase tracking-wider">Bin</th>
-                        <th className="px-6 py-4 text-left text-xs font-semibold text-white/70 uppercase tracking-wider">Status</th>
-                        <th className="px-6 py-4 text-left text-xs font-semibold text-white/70 uppercase tracking-wider">Fill Level</th>
-                        <th className="px-6 py-4 text-left text-xs font-semibold text-white/70 uppercase tracking-wider">Actions</th>
-                      </tr>
-                    </thead>
+                        <thead className="sticky top-0 z-10 bg-gray-900">
+                          <tr className="border-b border-white/10">
+                            <th className="px-6 py-4 text-left text-xs font-semibold text-white/70 uppercase tracking-wider">Bin</th>
+                            <th className="px-6 py-4 text-left text-xs font-semibold text-white/70 uppercase tracking-wider">Status</th>
+                            <th className="px-6 py-4 text-left text-xs font-semibold text-white/70 uppercase tracking-wider">Fill Level</th>
+                            <th className="px-6 py-4 text-left text-xs font-semibold text-white/70 uppercase tracking-wider">Actions</th>
+                          </tr>
+                        </thead>
 
                     <tbody className="divide-y divide-white/5">
                       {filteredBins.map((bin) => (

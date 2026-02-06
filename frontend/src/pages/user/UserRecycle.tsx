@@ -46,6 +46,8 @@ const UserRecycle = () => {
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [manualMode, setManualMode] = useState<boolean>(false);
   const [selectedItem, setSelectedItem] = useState<string>("");
+  const [confirmationModalOpen, setConfirmationModalOpen] = useState<boolean>(false);
+  const [qrScannerModalOpen, setQrScannerModalOpen] = useState<boolean>(false);
 
   const API_BASE = (import.meta.env.VITE_API_URL as string) ?? "http://127.0.0.1:8000";
 
@@ -203,6 +205,7 @@ const UserRecycle = () => {
       setResult(null);
       setScannedBinId(null);
       setSelectedItem("");
+      setConfirmationModalOpen(false);
     } catch (err) {
       console.error(err);
       alert("Transaction failed. Please try again.");
@@ -213,11 +216,13 @@ const UserRecycle = () => {
 
   const handleReject = () => {
     setScannedBinId(null);
+    setConfirmationModalOpen(false);
   };
 
   const handleChangeSelection = () => {
     setManualMode(true);
     setScannedBinId(null);
+    setConfirmationModalOpen(false);
   };
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -245,7 +250,7 @@ const UserRecycle = () => {
         {/* Action Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
           {/* Camera Scan Card */}
-          <SpotlightCard className="bg-linear-to-br from-blue-500/10 to-blue-600/5 backdrop-blur-xl border border-blue-500/20 rounded-xl p-6 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300 h-full">
+          <SpotlightCard className="bg-gradient-to-br from-blue-500/10 to-blue-600/5 backdrop-blur-xl border border-blue-500/20 rounded-xl p-6 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300 h-full">
             <div className="flex flex-col items-center justify-center text-center h-full">
               <div className="p-4 bg-blue-500/20 rounded-xl mb-4">
                 <svg className="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -265,7 +270,7 @@ const UserRecycle = () => {
           </SpotlightCard>
 
           {/* Upload Photo Card */}
-            <SpotlightCard className="bg-linear-to-br from-purple-500/10 to-purple-600/5 backdrop-blur-xl border border-purple-500/20 rounded-xl p-6 hover:shadow-xl hover:shadow-purple-500/10 transition-all duration-300 h-full">
+            <SpotlightCard className="bg-gradient-to-br from-purple-500/10 to-purple-600/5 backdrop-blur-xl border border-purple-500/20 rounded-xl p-6 hover:shadow-xl hover:shadow-purple-500/10 transition-all duration-300 h-full">
               <div className="flex flex-col items-center justify-center text-center h-full">
               <div className="p-4 bg-purple-500/20 rounded-xl mb-4">
                 <svg className="w-8 h-8 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -293,7 +298,7 @@ const UserRecycle = () => {
           </SpotlightCard>
 
           {/* Manual Selection Card */}
-            <SpotlightCard className="bg-linear-to-br from-green-500/10 to-green-600/5 backdrop-blur-xl border border-green-500/20 rounded-xl p-6 hover:shadow-xl hover:shadow-green-500/10 transition-all duration-300 h-full">
+            <SpotlightCard className="bg-gradient-to-br from-green-500/10 to-green-600/5 backdrop-blur-xl border border-green-500/20 rounded-xl p-6 hover:shadow-xl hover:shadow-green-500/10 transition-all duration-300 h-full">
               <div className="flex flex-col items-center justify-center text-center h-full">
               <div className="p-4 bg-green-500/20 rounded-xl mb-4">
                 <svg className="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -329,6 +334,68 @@ const UserRecycle = () => {
                   onClose={() => setCameraModalOpen(false)}
                 />
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* QR Scanner Modal */}
+        {qrScannerModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div 
+              className="absolute inset-0 bg-black/70 backdrop-blur-sm" 
+              onClick={() => setQrScannerModalOpen(false)} 
+            />
+            <div className="relative w-full max-w-3xl">
+              <SpotlightCard className="bg-gradient-to-br from-blue-500/10 to-blue-600/5 backdrop-blur-xl border border-blue-500/20 rounded-xl p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-xl font-semibold text-white flex items-center gap-2">
+                    <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+                    </svg>
+                    Scan Bin QR Code
+                  </h3>
+                  <button
+                    onClick={() => setQrScannerModalOpen(false)}
+                    className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+                  >
+                    <svg className="w-6 h-6 text-white/60 hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+                
+                <QRScanner
+                  onScanSuccess={(decodedText) => {
+                    const binId = extractBinIdFromQR(decodedText) ?? decodedText.trim();
+                    if (!binId) {
+                      alert("Invalid QR Code. Please try again.");
+                      return;
+                    }
+                    setScannedBinId(binId);
+                    setQrScannerModalOpen(false);
+                    setConfirmationModalOpen(true);
+                  }}
+                />
+              </SpotlightCard>
+            </div>
+          </div>
+        )}
+
+        {/* Confirmation Modal */}
+        {confirmationModalOpen && scannedBinId && result && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setConfirmationModalOpen(false)} />
+            <div className="relative w-full max-w-2xl">
+              <SpotlightCard className="bg-gradient-to-br from-green-500/10 to-green-600/5 backdrop-blur-xl border border-green-500/20 rounded-xl p-8">
+                <Confirmation
+                  result={result}
+                  binId={scannedBinId}
+                  binName={bins.find((b) => String(b.id) === scannedBinId)?.name}
+                  onAccept={handleAccept}
+                  onReject={handleReject}
+                  loading={txnLoading}
+                />
+              </SpotlightCard>
             </div>
           </div>
         )}
@@ -442,7 +509,7 @@ const UserRecycle = () => {
                 </div>
               )}
 
-              {/* QR Scanner Section */}
+              {/* QR Scanner Button */}
               <div>
                 <h3 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
                   <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -452,34 +519,18 @@ const UserRecycle = () => {
                 </h3>
                 <p className="text-white/60 text-sm mb-4">Point your camera at the QR code on the e-waste bin</p>
                 
-                <div className="bg-black/20 rounded-xl p-4 border border-white/10">
-                  <QRScanner
-                    onScanSuccess={(decodedText) => {
-                      const binId = extractBinIdFromQR(decodedText) ?? decodedText.trim();
-                      if (!binId) {
-                        alert("Invalid QR Code. Please try again.");
-                        return;
-                      }
-                      setScannedBinId(binId);
-                    }}
-                  />
-                </div>
+                <button
+                  type="button"
+                  onClick={() => setQrScannerModalOpen(true)}
+                  className="w-full py-4 px-6 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-blue-500/30 hover:shadow-xl transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-3"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+                  </svg>
+                  Scan QR Code
+                </button>
               </div>
             </SpotlightCard>
-
-            {/* Confirmation */}
-            {scannedBinId && (
-              <SpotlightCard className="bg-linear-to-br from-green-500/10 to-green-600/5 backdrop-blur-xl border border-green-500/20 rounded-xl p-8">
-                <Confirmation
-                  result={result}
-                  binId={scannedBinId}
-                  binName={bins.find((b) => String(b.id) === scannedBinId)?.name}
-                  onAccept={handleAccept}
-                  onReject={handleReject}
-                  loading={txnLoading}
-                />
-              </SpotlightCard>
-            )}
           </div>
         )}
 

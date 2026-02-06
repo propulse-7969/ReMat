@@ -105,6 +105,8 @@ const UserDashboard = () => {
   const itemsRecycled = transactions.length;
 
   const activeBins = bins.filter((b) => b.status === "active");
+  // const totalCapacity = bins.reduce((sum, b) => sum + (b.capacity || 0), 0);
+  // const totalFillLevel = bins.reduce((sum, b) => sum + (b.fill_level || 0), 0);
   // const avgFillPercentage = totalCapacity > 0 ? Math.round((totalFillLevel / totalCapacity) * 100) : 0;
   
   const mapCenter: [number, number] = userLocation

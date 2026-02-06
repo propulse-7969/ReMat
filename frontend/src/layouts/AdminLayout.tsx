@@ -3,6 +3,7 @@ import Grainient from "../pages/components/Granient";
 import Footer from "../pages/components/Footer";
 import PillNav from "../pages/components/PillNav";
 import logo from "../../src/tab-logo.png"
+import GradualBlur from "../pages/components/GradualBlur";
 
 const AdminLayout = () => {
     const items = [
@@ -40,6 +41,19 @@ const AdminLayout = () => {
                     centerX={0}
                     centerY={0}
                     zoom={0.9}
+                />
+            </div>
+
+            <div style={{ position: 'fixed', height: '120px', overflow: 'hidden', top: 0, left: 0, right: 0, zIndex: 10 }}>
+                <GradualBlur
+                    target="parent"
+                    position="top"
+                    height="7rem"
+                    strength={4}
+                    divCount={5}
+                    curve="bezier"
+                    exponential
+                    opacity={1}
                 />
             </div>
 

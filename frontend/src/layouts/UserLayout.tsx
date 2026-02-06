@@ -47,11 +47,7 @@ const UserLayout = () => {
             </div>
 
             {/* Gradual Blur at Top - Fixed */}
-            <section style={{ position: 'fixed', height: '500px', overflow: 'hidden', top: 0, left: 0, right: 0, zIndex: 10 }}>
-                <div style={{ height: '100%', overflow: 'auto', padding: '6rem 2rem' }}>
-                    {/* Content Here - such as an image or text */}
-                </div>
-                
+                <div style={{ position: 'fixed', height: '120px', overflow: 'hidden', top: 0, left: 0, right: 0, zIndex: 10 }}>
                 <GradualBlur
                     target="parent"
                     position="top"
@@ -62,7 +58,7 @@ const UserLayout = () => {
                     exponential
                     opacity={1}
                 />
-            </section>
+                </div>
 
             {/* Navbar */}
             <div className="relative w-full flex items-center justify-center" style={{ zIndex: 20 }}>
