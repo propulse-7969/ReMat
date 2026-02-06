@@ -48,7 +48,7 @@ const Login = () => {
       setLoading(true);
       await loginWithGoogle();
       toast.success("Logged in successfully!")
-      navigate("/", {replace: true});
+      navigate("/user/dashboard", {replace: true});
     } 
     catch (err: unknown) {
       const error = err as {code?: string, message?: string};
