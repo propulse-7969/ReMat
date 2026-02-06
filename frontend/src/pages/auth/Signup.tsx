@@ -50,6 +50,7 @@ const Signup = () => {
     try {
       setLoading(true);
       await signupWithGoogle();
+      toast.success("Signed up successfully!")
       navigate("/", {replace: true});
     } 
     catch (err: unknown) {

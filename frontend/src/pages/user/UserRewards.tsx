@@ -10,6 +10,7 @@ type Prize = {
   category: "accessories" | "lifestyle" | "tech" | "eco";
   stock: number;
   featured?: boolean;
+  imageUrl: string;
 };
 
 const PRIZES: Prize[] = [
@@ -21,6 +22,7 @@ const PRIZES: Prize[] = [
     category: "lifestyle",
     stock: 25,
     featured: true,
+    imageUrl: "https://imgs.search.brave.com/FKZVAOYzYs7UVj9i-P2BdAECsThKsYPoGII9vyEu55M/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWFn/ZXMudGVlcHVibGlj/LmNvbS9kZXJpdmVk/L3Byb2R1Y3Rpb24v/ZGVzaWducy84Mjkx/MTAxNF8wLzE3NjIz/NTEzMDIvaV9tOmJp/X3Byb2R1Y3Rpb25f/YmxhbmtzX210bDUz/b2ZvaHdxNWdvcWpv/OWtlXzE0NjI4Mjkw/MTUsY18wXzBfNDcw/eCxzXzMxMyxxXzkw/LmpwZw"
   },
   {
     id: "2",
@@ -29,6 +31,7 @@ const PRIZES: Prize[] = [
     points: 300,
     category: "lifestyle",
     stock: 40,
+    imageUrl: "https://imgs.search.brave.com/2b4UfN4G3ff2PTiWUTRW3Wg-klgWWmekuqPGGnda-js/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/dGhld2FsbGV0c3Rv/cmUuaW4vY2RuL3No/b3AvcHJvZHVjdHMv/NjJhZGNiYjNjZTIx/Ny5qcGc_dj0xNjU3/Nzg0ODYzJndpZHRo/PTEyODA"
   },
   {
     id: "3",
@@ -37,6 +40,7 @@ const PRIZES: Prize[] = [
     points: 400,
     category: "tech",
     stock: 30,
+    imageUrl: "https://imgs.search.brave.com/pBCYe7Sf6-R_YJThohuPOKOGaOgnFjsco4SDYzB6yPo/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9hZ3Jl/ZW5jby5pbi9jZG4v/c2hvcC9maWxlcy9O/b21hZF8xNl9CbGFj/ay5qcGc_dj0xNzQ5/MzY1MTczJndpZHRo/PTUzMw"
   },
   {
     id: "4",
@@ -46,6 +50,7 @@ const PRIZES: Prize[] = [
     category: "lifestyle",
     stock: 15,
     featured: true,
+    imageUrl: "https://imgs.search.brave.com/Y_D0_Eh1pgE1cDuxJzPZFaxA2LuN529LiZ0QAyZP6g0/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9raWRz/cGFyay5jby5pbi9j/ZG4vc2hvcC9maWxl/cy8zQTRDNkEyOC1F/QzRELTQyMTctQjgw/Ny0wRDBDMEE3RDRF/OTAud2VicD92PTE3/MzE0OTQyMDMmd2lk/dGg9MTQ0NQ"
   },
   {
     id: "5",
@@ -54,6 +59,7 @@ const PRIZES: Prize[] = [
     points: 600,
     category: "eco",
     stock: 35,
+    imageUrl: "https://imgs.search.brave.com/-gdEeSG8tIEtNutwcNYGWRtCqp9DP6bW5fqaS4xaR5Q/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/eW91cnByaW50Lmlu/L25ldy1hZG1pbi1h/amF4LnBocD9hY3Rp/b249cmVzaXplX291/dGVyX2ltYWdlJmNm/Y2FjaGU9YWxsJnVy/bD1odHRwczovL3lw/LW1lZGlhLnMzLmFt/YXpvbmF3cy5jb20v/RGVzaWduc19Jbm5l/cnNfYW5kX091dGVy/cy9Db3Jwb3JhdGVf/SXRlbXMvY29ycF9w/b3dlcl9wbHVzX2gy/NDdfby5qcGcmcmVz/aXplVG89NDUwJmZv/cm1hdD13ZWJw"
   },
   {
     id: "6",
@@ -63,6 +69,7 @@ const PRIZES: Prize[] = [
     category: "tech",
     stock: 10,
     featured: true,
+    imageUrl: "https://imgs.search.brave.com/vMxJKGAcA92vWTwM0PFmQ2xEc1MB9G-eGrxXhoDPfbo/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jZG4u/dGhld2lyZWN1dHRl/ci5jb20vd3AtY29u/dGVudC9tZWRpYS8y/MDIyLzExL3dpcmVs/ZXNzZWFyYnVkcy0y/MDQ4cHgtODgzMS5q/cGc"
   },
   {
     id: "7",
@@ -71,6 +78,7 @@ const PRIZES: Prize[] = [
     points: 350,
     category: "eco",
     stock: 50,
+    imageUrl: "https://imgs.search.brave.com/nZCr6BlSOvWfH_Ed99wWqhqlTfyNO1-BYuMWGdlaxNA/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pLmV0/c3lzdGF0aWMuY29t/LzIwMjQwMTQ3L3Iv/aWwvMGY1ZTBiLzU4/NjE4MDUyNTUvaWxf/MzAweDMwMC41ODYx/ODA1MjU1XzN0cmou/anBn"
   },
   {
     id: "8",
@@ -79,6 +87,7 @@ const PRIZES: Prize[] = [
     points: 250,
     category: "accessories",
     stock: 60,
+    imageUrl: "https://imgs.search.brave.com/kMGXwiiqLDEDolTPWBDCowLW69CWcqyAtXM6jDFdF6Q/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/bm9wbGFzdGljc2hv/cC5pbi93cC1jb250/ZW50L3VwbG9hZHMv/MjAyMC8xMS9DYW52/YXMtVG90ZS1CYWct/MTAyNHgxMDI0Lmpw/Zw"
   },
   {
     id: "9",
@@ -87,6 +96,7 @@ const PRIZES: Prize[] = [
     points: 450,
     category: "accessories",
     stock: 20,
+    imageUrl: "https://imgs.search.brave.com/lNYsvSiM9d03bec8xLrxH6GQoRKHGTiKtWKTiqX5Yv0/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9oeWVy/Z29vZHMuY29tL2Nk/bi9zaG9wL2ZpbGVz/L0FwcGxlV2F0Y2hC/YW5kX2JsYWNrbGl6/YXJkX3NpbHZlcl8x/ZWM2ZmVjYi1jNjg5/LTQ2OWYtYjllZi0z/MTZmNDk0OTYyMjAu/anBnP3Y9MTc1NjIw/OTkzMiZ3aWR0aD03/MjA"
   },
   {
     id: "10",
@@ -95,6 +105,7 @@ const PRIZES: Prize[] = [
     points: 700,
     category: "tech",
     stock: 18,
+    imageUrl: "https://imgs.search.brave.com/Wrcrh_aa170XhxHxhveNBIfDI6a-PRP5QzsjKLRXt38/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9ydWtt/aW5pbTIuZmxpeGNh/cnQuY29tL2ltYWdl/LzYxMi82MTIveGlm/MHEvYmFnL3QvbS9k/LzI1LTQtcHJlbWl1/bS1sYXB0b3Atc2xl/ZXZlLWNhc2UtcHJv/dGVjdGl2ZS1sYXB0/b3AtY292ZXItd2l0/aC1vcmlnaW5hbC1p/bWFoamsyNXB4dnFw/NzdxLmpwZWc_cT03/MA"
   },
   {
     id: "11",
@@ -103,6 +114,7 @@ const PRIZES: Prize[] = [
     points: 400,
     category: "eco",
     stock: 45,
+    imageUrl: "https://imgs.search.brave.com/4x-g9Lj2ttX8lGkUDSROUwugiIpjcq2liGNnOgb9H7U/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL0kv/ODEwVTdSbjMtckwu/anBn"
   },
   {
     id: "12",
@@ -111,6 +123,7 @@ const PRIZES: Prize[] = [
     points: 280,
     category: "lifestyle",
     stock: 55,
+    imageUrl: "https://imgs.search.brave.com/TTAPC_7t6egv-uOEX4JrORYMz2QKSFBuOIcrquUQt2M/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL0kv/NDFhaCt1NnBvMkwu/anBn"
   },
 ];
 
@@ -149,7 +162,6 @@ const UserRewards = () => {
   const confirmRedeem = async () => {
     if (!selectedPrize) return;
     
-    // TODO: Implement actual API call
     console.log("Redeeming:", selectedPrize);
     alert(`Successfully redeemed ${selectedPrize.name}! Check your email for delivery details.`);
     setShowRedeemModal(false);
@@ -294,12 +306,12 @@ const UserRewards = () => {
                   
                   <div className="relative h-56 bg-linear-to-br from-white/10 to-white/5 flex items-center justify-center overflow-hidden">
                     <div className="absolute inset-0 bg-linear-to-br from-yellow-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    <div className="text-6xl group-hover:scale-110 transition-transform duration-300">
-                      {prize.category === "lifestyle" && "🎽"}
-                      {prize.category === "tech" && "📱"}
-                      {prize.category === "eco" && "🌱"}
-                      {prize.category === "accessories" && "👜"}
-                    </div>
+                    <img
+                    src={prize.imageUrl}
+                    alt={prize.name}
+                    className="group-hover:scale-110 transition-transform duration-300 absolute inset-0 w-full h-full object-cover"
+                    loading="lazy"
+                  />
                     <div className="absolute top-3 right-3 px-3 py-1 bg-yellow-500/30 border border-yellow-400/50 rounded-full backdrop-blur-sm">
                       <span className="text-xs font-bold text-yellow-300">⭐ Featured</span>
                     </div>
@@ -367,12 +379,12 @@ const UserRewards = () => {
                 {/* Image Placeholder */}
                 <div className="relative h-48 bg-linear-to-br from-white/10 to-white/5 flex items-center justify-center overflow-hidden">
                   <div className="absolute inset-0 bg-linear-to-br from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  <div className="text-5xl group-hover:scale-110 transition-transform duration-300">
-                    {prize.category === "lifestyle" && "🎽"}
-                    {prize.category === "tech" && "📱"}
-                    {prize.category === "eco" && "🌱"}
-                    {prize.category === "accessories" && "👜"}
-                  </div>
+                  <img
+                    src={prize.imageUrl}
+                    alt={prize.name}
+                    className="group-hover:scale-110 transition-transform duration-300 absolute inset-0 w-full h-full object-cover"
+                    loading="lazy"
+                  />
                   {prize.featured && (
                     <div className="absolute top-3 right-3 px-3 py-1 bg-yellow-500/30 border border-yellow-400/50 rounded-full backdrop-blur-sm">
                       <span className="text-xs font-bold text-yellow-300">⭐</span>

@@ -34,71 +34,73 @@ const UserProfile = () => {
   }, [profile?.uid]);
 
   const handleDeleteAccount = async () => {
-  if (!token) return;
+    if (!token) return;
 
-  toast(
-    (t) => (
-      <div className="flex flex-col gap-3">
-        <p className="font-medium">
-          Delete your account permanently?
-        </p>
-        <p className="text-sm text-gray-500">
-          This action cannot be undone. You will lose all points and recycling history.
-        </p>
+    toast(
+      (t) => (
+        <div className="flex flex-col gap-3">
+          <p className="font-medium">
+            Delete your account permanently?
+          </p>
+          <p className="text-sm text-gray-500">
+            This action cannot be undone. You will lose all points and recycling history.
+          </p>
 
-        <div className="flex justify-end gap-2 mt-2">
-          <button
-            onClick={() => toast.dismiss(t.id)}
-            className="px-3 py-1 text-sm rounded bg-gray-200 hover:bg-gray-300"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={async () => {
-              toast.dismiss(t.id);
-              setDeleting(true);
+          <div className="flex justify-end gap-2 mt-2">
+            <button
+              onClick={() => toast.dismiss(t.id)}
+              className="px-3 py-1 text-sm rounded bg-gray-200 hover:bg-gray-300"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={async () => {
+                toast.dismiss(t.id);
+                setDeleting(true);
 
-              const deletePromise = (async () => {
-                const res = await fetch(`${API_BASE}/auth/me`, {
-                  method: "DELETE",
-                  headers: {
-                    Authorization: `Bearer ${token}`,
-                  },
+                const deletePromise = (async () => {
+                  const res = await fetch(`${API_BASE}/auth/me`, {
+                    method: "DELETE",
+                    headers: {
+                      Authorization: `Bearer ${token}`,
+                    },
+                  });
+
+                  if (!res.ok) {
+                    throw new Error("Failed to delete account");
+                  }
+
+                  const currentUser = auth.currentUser;
+                  if (currentUser) {
+                    await deleteUser(currentUser);
+                  }
+                })();
+
+                toast.promise(deletePromise, {
+                  loading: "Deleting your account…",
+                  success: "Account deleted successfully 👋",
+                  error: "Failed to delete account. Please try again.",
                 });
 
-                if (!res.ok) {
-                  throw new Error("Failed to delete account");
+                try {
+                  await deletePromise;
+                } finally {
+                  setDeleting(false);
+                  logout();
                 }
-
-                const currentUser = auth.currentUser;
-                if (currentUser) {
-                  await deleteUser(currentUser);
-                }
-              })();
-
-              toast.promise(deletePromise, {
-                loading: "Deleting your account…",
-                success: "Account deleted successfully 👋",
-                error: "Failed to delete account. Please try again.",
-              });
-
-              try {
-                await deletePromise;
-              } finally {
-                setDeleting(false);
-                logout();
-              }
-            }}
-            className="px-3 py-1 text-sm rounded bg-red-600 text-white hover:bg-red-700"
-          >
-            Delete
-          </button>
+              }}
+              className="px-3 py-1 text-sm rounded bg-red-600 text-white hover:bg-red-700"
+            >
+              Delete
+            </button>
+          </div>
         </div>
-      </div>
-    ),
-    { duration: Infinity }
-  );
-};
+      ),
+      { duration: Infinity }
+    );
+  };
+
+
   const handleLogout = () => {
     logout();
   };
