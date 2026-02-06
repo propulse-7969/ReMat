@@ -4,6 +4,8 @@ import { useAuth } from "../../auth/useAuth";
 import MapView from "../components/MapView";
 import type { Bin } from "../../types";
 import SpotlightCard from "../components/SpotlightCard";
+import ElectricBorder from "../components/ElectricBorder";
+
 
 const API_BASE =
   (import.meta.env.VITE_API_BASE_URL as string) || "http://127.0.0.1:8000";
@@ -160,6 +162,12 @@ const UserDashboard = () => {
           {/* Left Column - Action Cards */}
           <div className="lg:col-span-1 space-y-6">
             {/* Recycle CTA */}
+            <ElectricBorder
+              color="#7df9ff"
+              speed={1}
+              chaos={0.12}
+              style={{ borderRadius: 16 }}
+            >
             <SpotlightCard className="bg-gradient-to-br from-green-600 to-green-700 rounded-xl p-8 shadow-2xl hover:shadow-green-500/20 transition-all duration-300 relative overflow-hidden group">
               <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full blur-3xl -mr-20 -mt-20 group-hover:scale-150 transition-transform duration-700"></div>
               <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/5 rounded-full blur-2xl -ml-16 -mb-16 group-hover:scale-150 transition-transform duration-700"></div>
@@ -177,7 +185,7 @@ const UserDashboard = () => {
                 </button>
               </div>
             </SpotlightCard>
-
+            </ElectricBorder>
             {/* Quick Stats */}
             <SpotlightCard className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-6">
               <h3 className="text-lg font-semibold text-white mb-5 flex items-center gap-2">

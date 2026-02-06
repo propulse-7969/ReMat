@@ -9,11 +9,11 @@ import Footer from "../pages/components/Footer";
 const UserLayout = () => {
     const items = [
                     { label: 'Dashboard', href: '/user/dashboard' },
-                    { label: 'Profile', href: '/user/profile' },
                     { label: 'Recycle', href: '/user/recycle' },
                     { label: 'Rewards', href: '/user/rewards' },
-                    { label: 'Transactions', href: '/user/transactions' },
                     { label: 'Leaderboard', href: '/user/leaderboard' },
+                    { label: 'Transactions', href: '/user/transactions' },
+                    { label: 'Profile', href: '/user/profile' },
                 ];
     return (
         <div className="relative min-h-screen w-full">
