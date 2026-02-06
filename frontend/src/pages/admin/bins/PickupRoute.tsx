@@ -237,7 +237,7 @@ const PickupRoute = () => {
         </div>
 
         {/* Stats Bar */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
           <SpotlightCard className="bg-blue-500/10 backdrop-blur-xl border border-blue-500/20 rounded-xl p-4">
             <p className="text-xs text-blue-300/70 uppercase tracking-wide font-medium mb-1">Total Bins</p>
             <p className="text-2xl font-bold text-white">{bins.length}</p>
