@@ -26,6 +26,7 @@ import RoleRedirect from "./RoleRedirect";
 import BinDetails from "../pages/admin/bins/BinDetails";
 import PickupRoute from "../pages/admin/bins/PickupRoute";
 import BinScreen from "../pages/bin/BinScreen";
+import Analytics from "../pages/admin/analytics/Analytics";
 
 
 
@@ -89,6 +90,7 @@ export const router = createBrowserRouter([
             {path: "bins", element: <ViewBins />},
             {path: "bins/:binId", element: <BinDetails />},
             {path: "route", element: <PickupRoute />},
+            {path: "analytics", element: <Analytics />},
             { index: true, element: <Navigate to="dashboard" replace /> },
         ]
     }
