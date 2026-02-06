@@ -173,7 +173,7 @@ const UserRewards = () => {
 
   return (
     <div className="min-h-screen pb-0">
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
+      <div className="max-w-350 mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
         {/* Header Section */}
         <div className="mb-8">
           <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl shadow-black/20 overflow-hidden">
@@ -186,7 +186,7 @@ const UserRewards = () => {
                   <p className="text-base text-white/60">Redeem your points for exclusive eco-friendly prizes and goodies</p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="px-6 py-4 bg-gradient-to-br from-green-500/20 to-green-600/10 border border-green-500/30 rounded-xl backdrop-blur-sm">
+                  <div className="px-6 py-4 bg-linear-to-br from-green-500/20 to-green-600/10 border border-green-500/30 rounded-xl backdrop-blur-sm">
                     <p className="text-xs text-green-300/80 uppercase tracking-wider font-semibold mb-1">Available Points</p>
                     <p className="text-3xl font-bold text-green-400">{userPoints}</p>
                   </div>
@@ -198,7 +198,7 @@ const UserRewards = () => {
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
-          <SpotlightCard className="bg-gradient-to-br from-green-500/10 to-green-600/5 backdrop-blur-xl border border-green-500/20 rounded-xl p-6 hover:shadow-xl hover:shadow-green-500/10 transition-all duration-300 group">
+          <SpotlightCard className="bg-linear-to-br from-green-500/10 to-green-600/5 backdrop-blur-xl border border-green-500/20 rounded-xl p-6 hover:shadow-xl hover:shadow-green-500/10 transition-all duration-300 group">
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 bg-green-500/20 rounded-lg group-hover:scale-110 transition-transform duration-300">
                 <svg className="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -211,7 +211,7 @@ const UserRewards = () => {
             <p className="text-3xl font-bold text-white">{userPoints} pts</p>
           </SpotlightCard>
 
-          <SpotlightCard className="bg-gradient-to-br from-blue-500/10 to-blue-600/5 backdrop-blur-xl border border-blue-500/20 rounded-xl p-6 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300 group">
+          <SpotlightCard className="bg-linear-to-br from-blue-500/10 to-blue-600/5 backdrop-blur-xl border border-blue-500/20 rounded-xl p-6 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300 group">
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 bg-blue-500/20 rounded-lg group-hover:scale-110 transition-transform duration-300">
                 <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -223,7 +223,7 @@ const UserRewards = () => {
             <p className="text-3xl font-bold text-white">{PRIZES.length}</p>
           </SpotlightCard>
 
-          <SpotlightCard className="bg-gradient-to-br from-purple-500/10 to-purple-600/5 backdrop-blur-xl border border-purple-500/20 rounded-xl p-6 hover:shadow-xl hover:shadow-purple-500/10 transition-all duration-300 group">
+          <SpotlightCard className="bg-linear-to-br from-purple-500/10 to-purple-600/5 backdrop-blur-xl border border-purple-500/20 rounded-xl p-6 hover:shadow-xl hover:shadow-purple-500/10 transition-all duration-300 group">
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 bg-purple-500/20 rounded-lg group-hover:scale-110 transition-transform duration-300">
                 <svg className="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -235,7 +235,7 @@ const UserRewards = () => {
             <p className="text-3xl font-bold text-white">{affordablePrizes}</p>
           </SpotlightCard>
 
-          <SpotlightCard className="bg-gradient-to-br from-orange-500/10 to-orange-600/5 backdrop-blur-xl border border-orange-500/20 rounded-xl p-6 hover:shadow-xl hover:shadow-orange-500/10 transition-all duration-300 group">
+          <SpotlightCard className="bg-linear-to-br from-orange-500/10 to-orange-600/5 backdrop-blur-xl border border-orange-500/20 rounded-xl p-6 hover:shadow-xl hover:shadow-orange-500/10 transition-all duration-300 group">
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 bg-orange-500/20 rounded-lg group-hover:scale-110 transition-transform duration-300">
                 <svg className="w-6 h-6 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -289,11 +289,11 @@ const UserRewards = () => {
               {featuredPrizes.map((prize) => (
                 <SpotlightCard
                   key={prize.id}
-                  className="bg-gradient-to-br from-yellow-500/10 to-yellow-600/5 backdrop-blur-xl border border-yellow-500/30 rounded-xl overflow-hidden hover:shadow-2xl hover:shadow-yellow-500/20 transition-all duration-300 group"
+                  className="bg-linear-to-br from-yellow-500/10 to-yellow-600/5 backdrop-blur-xl border border-yellow-500/30 rounded-xl overflow-hidden hover:shadow-2xl hover:shadow-yellow-500/20 transition-all duration-300 group"
                 >
                   {/* Image Placeholder */}
-                  <div className="relative h-56 bg-gradient-to-br from-white/10 to-white/5 flex items-center justify-center overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="relative h-56 bg-linear-to-br from-white/10 to-white/5 flex items-center justify-center overflow-hidden">
+                    <div className="absolute inset-0 bg-linear-to-br from-yellow-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     <div className="text-6xl group-hover:scale-110 transition-transform duration-300">
                       {prize.category === "lifestyle" && "🎽"}
                       {prize.category === "tech" && "📱"}
@@ -336,7 +336,7 @@ const UserRewards = () => {
                       disabled={userPoints < prize.points}
                       className={`w-full py-3 px-4 rounded-lg font-semibold transition-all duration-200 ${
                         userPoints >= prize.points
-                          ? "bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 active:translate-y-0"
+                          ? "bg-linear-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 active:translate-y-0"
                           : "bg-white/5 border border-white/10 text-white/30 cursor-not-allowed"
                       }`}
                     >
@@ -365,8 +365,8 @@ const UserRewards = () => {
                 className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden hover:shadow-2xl hover:shadow-white/10 transition-all duration-300 group"
               >
                 {/* Image Placeholder */}
-                <div className="relative h-48 bg-gradient-to-br from-white/10 to-white/5 flex items-center justify-center overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="relative h-48 bg-linear-to-br from-white/10 to-white/5 flex items-center justify-center overflow-hidden">
+                  <div className="absolute inset-0 bg-linear-to-br from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   <div className="text-5xl group-hover:scale-110 transition-transform duration-300">
                     {prize.category === "lifestyle" && "🎽"}
                     {prize.category === "tech" && "📱"}
@@ -385,12 +385,12 @@ const UserRewards = () => {
                     <h3 className="text-base font-bold text-white line-clamp-1 flex-1">
                       {prize.name}
                     </h3>
-                    <div className={`px-2 py-0.5 rounded text-xs font-semibold border ${getCategoryColor(prize.category)} ml-2 flex-shrink-0`}>
+                    <div className={`px-2 py-0.5 rounded text-xs font-semibold border ${getCategoryColor(prize.category)} ml-2 shrink-0`}>
                       {prize.category}
                     </div>
                   </div>
 
-                  <p className="text-sm text-white/60 mb-4 line-clamp-2 min-h-[2.5rem]">
+                  <p className="text-sm text-white/60 mb-4 line-clamp-2 min-h-10">
                     {prize.description}
                   </p>
 
@@ -411,7 +411,7 @@ const UserRewards = () => {
                     disabled={userPoints < prize.points}
                     className={`w-full py-2.5 px-4 rounded-lg font-semibold text-sm transition-all duration-200 ${
                       userPoints >= prize.points
-                        ? "bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 active:translate-y-0"
+                        ? "bg-linear-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 active:translate-y-0"
                         : "bg-white/5 border border-white/10 text-white/30 cursor-not-allowed"
                     }`}
                   >
@@ -459,7 +459,7 @@ const UserRewards = () => {
                 </button>
                 <button
                   onClick={confirmRedeem}
-                  className="flex-1 py-3 px-4 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 rounded-lg font-semibold text-white shadow-lg hover:shadow-xl transition-all duration-200"
+                  className="flex-1 py-3 px-4 bg-linear-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 rounded-lg font-semibold text-white shadow-lg hover:shadow-xl transition-all duration-200"
                 >
                   Confirm
                 </button>

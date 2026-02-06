@@ -190,9 +190,9 @@ const ViewBins = () => {
         </div>
 
         {/* Main Content */}
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 lg:gap-8">
-          {/* Table Column */}
-          <div className="xl:col-span-1">
+        <div className="space-y-6">
+          {/* Table Section */}
+          <div>
             <SpotlightCard className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden">
               <div className="p-6 border-b border-white/10">
                 <h2 className="text-xl font-bold text-white flex items-center gap-2">
@@ -204,6 +204,7 @@ const ViewBins = () => {
               </div>
 
               <div className="overflow-x-auto">
+                <div className="max-h-120 overflow-y-auto">
                 {filteredBins.length === 0 ? (
                   <div className="p-12 text-center">
                     <svg className="w-16 h-16 text-white/20 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -214,7 +215,7 @@ const ViewBins = () => {
                   </div>
                 ) : (
                   <table className="w-full">
-                    <thead>
+                    <thead className="sticky top-0 z-10">
                       <tr className="bg-white/5 border-b border-white/10">
                         <th className="px-6 py-4 text-left text-xs font-semibold text-white/70 uppercase tracking-wider">Bin</th>
                         <th className="px-6 py-4 text-left text-xs font-semibold text-white/70 uppercase tracking-wider">Status</th>
@@ -303,7 +304,9 @@ const ViewBins = () => {
                       ))}
                     </tbody>
                   </table>
+                // </div>  
                 )}
+              </div>
               </div>
 
               {filteredBins.length > 0 && (
@@ -324,9 +327,9 @@ const ViewBins = () => {
             </SpotlightCard>
           </div>
 
-          {/* Map Column */}
-          <div className="xl:col-span-1">
-            <SpotlightCard className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-6 h-full sticky top-8">
+          {/* Map Section */}
+          <div>
+            <SpotlightCard className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-6">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-bold text-white flex items-center gap-2">
                   <svg className="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -369,7 +372,7 @@ const ViewBins = () => {
                 </div>
               )}
 
-              <div className="rounded-xl overflow-hidden border border-white/10 shadow-2xl" style={{ height: selectedBin ? '520px' : '600px' }}>
+              <div className="rounded-xl overflow-hidden border border-white/10 shadow-2xl" style={{ height: '500px' }}>
                 <MapView
                   bins={selectedBin ? [selectedBin] : filteredBins}
                   center={
