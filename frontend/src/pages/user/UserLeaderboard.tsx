@@ -7,6 +7,7 @@ type User = {
   id: string;
   name: string;
   points: number;
+  role: string;
 }
 
 const UserLeaderboard = () => {
@@ -29,7 +30,8 @@ const UserLeaderboard = () => {
         if (!res.ok) throw new Error("Failed to fetch leaderboard");
 
         const data = await res.json();
-        setUsers(data);
+        const filtered = data.filter((user: User) => user.role !== "admin");
+        setUsers(filtered);
       } catch (err) {
         console.error(err);
         setUsers([]);

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../../auth/useAuth";
 import SpotlightCard from "../components/SpotlightCard";
+import toast from "react-hot-toast";
 
 type Prize = {
   id: string;
@@ -152,7 +153,7 @@ const UserRewards = () => {
 
   const handleRedeem = (prize: Prize) => {
     if (userPoints < prize.points) {
-      alert(`You need ${prize.points - userPoints} more points to redeem this prize.`);
+      toast.error(`You need ${prize.points - userPoints} more points to redeem this prize.`);
       return;
     }
     setSelectedPrize(prize);
@@ -163,7 +164,7 @@ const UserRewards = () => {
     if (!selectedPrize) return;
     
     console.log("Redeeming:", selectedPrize);
-    alert(`Successfully redeemed ${selectedPrize.name}! Check your email for delivery details.`);
+    toast.success(`Successfully redeemed ${selectedPrize.name}! Check your email for delivery details.`);
     setShowRedeemModal(false);
     setSelectedPrize(null);
   };

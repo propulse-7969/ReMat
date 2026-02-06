@@ -7,30 +7,93 @@ import toast, {Toaster} from "react-hot-toast";
 
 const API_BASE = (import.meta.env.VITE_API_BASE_URL as string) || "http://127.0.0.1:8000";
 
+interface Transaction {
+  id: string;
+  points_awarded: number;
+  created_at: string;
+}
+
+// Level thresholds based on points
+const LEVEL_THRESHOLDS = [
+  { level: 1, minPoints: 0, maxPoints: 99 },
+  { level: 2, minPoints: 100, maxPoints: 249 },
+  { level: 3, minPoints: 250, maxPoints: 499 },
+  { level: 4, minPoints: 500, maxPoints: 999 },
+  { level: 5, minPoints: 1000, maxPoints: 1999 },
+  { level: 6, minPoints: 2000, maxPoints: 3999 },
+  { level: 7, minPoints: 4000, maxPoints: Infinity },
+];
+
+const calculateLevel = (points: number): { level: number; progress: number; pointsToNext: number } => {
+  const userLevel = LEVEL_THRESHOLDS.find(
+    (threshold) => points >= threshold.minPoints && points <= threshold.maxPoints
+  ) || LEVEL_THRESHOLDS[0];
+
+  const nextLevel = LEVEL_THRESHOLDS.find((t) => t.level === userLevel.level + 1);
+  
+  if (!nextLevel) {
+    // Max level reached
+    return {
+      level: userLevel.level,
+      progress: 100,
+      pointsToNext: 0,
+    };
+  }
+
+  const pointsInCurrentLevel = points - userLevel.minPoints;
+  const pointsNeededForLevel = nextLevel.minPoints - userLevel.minPoints;
+  const progress = Math.min(100, Math.round((pointsInCurrentLevel / pointsNeededForLevel) * 100));
+  const pointsToNext = nextLevel.minPoints - points;
+
+  return {
+    level: userLevel.level,
+    progress,
+    pointsToNext,
+  };
+};
+
 const UserProfile = () => {
   const { profile, token, logout } = useAuth();
   const [rank, setRank] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(false);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [transactionsLoading, setTransactionsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchRank = async () => {
+    const fetchData = async () => {
       if (!profile?.uid) return;
+      
       try {
-        const res = await fetch(
+        // Fetch rank
+        const rankRes = await fetch(
           `${API_BASE}/user/leaderboard?page=1&limit=1000`
         );
-        if (!res.ok) return;
-        const users: { id: string }[] = await res.json();
-        const idx = users.findIndex((u) => u.id === profile.uid);
-        setRank(idx >= 0 ? idx + 1 : null);
-      } catch {
+        if (rankRes.ok) {
+          const users: { id: string }[] = await rankRes.json();
+          const idx = users.findIndex((u) => u.id === profile.uid);
+          setRank(idx >= 0 ? idx + 1 : null);
+        }
+
+        // Fetch transactions
+        const txnRes = await fetch(
+          `${API_BASE}/user/transactions/${profile.uid}?page=1&limit=10000`
+        );
+        if (txnRes.ok) {
+          const txnData = await txnRes.json();
+          setTransactions(txnData || []);
+        }
+      } catch (err) {
+        console.error("Error fetching profile data:", err);
         setRank(null);
+        setTransactions([]);
       } finally {
         setLoading(false);
+        setTransactionsLoading(false);
       }
     };
-    fetchRank();
+    
+    fetchData();
   }, [profile?.uid]);
 
   const handleDeleteAccount = async () => {
@@ -254,31 +317,62 @@ const UserProfile = () => {
               </div>
 
               <div className="space-y-4">
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm text-white/60">Recycling Progress</span>
-                    <span className="text-sm font-semibold text-green-400">Level 3</span>
-                  </div>
-                  <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
-                    <div className="h-full bg-linear-to-r from-green-400 to-green-500 rounded-full" style={{ width: '65%' }}></div>
-                  </div>
-                  <p className="text-xs text-white/40 mt-1">350 more points to Level 4</p>
-                </div>
+                {(() => {
+                  const userPoints = profile.points ?? 0;
+                  const { level, progress, pointsToNext } = calculateLevel(userPoints);
+                  const itemsRecycled = transactions.length;
+                  
+                  // Calculate points this week
+                  const now = new Date();
+                  const startOfWeek = new Date(now);
+                  startOfWeek.setDate(now.getDate() - now.getDay());
+                  startOfWeek.setHours(0, 0, 0, 0);
+                  
+                  const pointsThisWeek = transactions
+                    .filter(txn => new Date(txn.created_at) >= startOfWeek)
+                    .reduce((sum, txn) => sum + (txn.points_awarded || 0), 0);
 
-                <div className="pt-4 border-t border-white/10 space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-white/60">Items Recycled</span>
-                    <span className="text-lg font-bold text-white">12</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-white/60">This Week</span>
-                    <span className="text-lg font-bold text-white">+45 pts</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-white/60">Total Earned</span>
-                    <span className="text-lg font-bold text-green-400">{profile.points ?? 0} pts</span>
-                  </div>
-                </div>
+                  return (
+                    <>
+                      <div>
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-sm text-white/60">Recycling Progress</span>
+                          <span className="text-sm font-semibold text-green-400">Level {level}</span>
+                        </div>
+                        <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
+                          <div 
+                            className="h-full bg-linear-to-r from-green-400 to-green-500 rounded-full transition-all duration-500" 
+                            style={{ width: `${progress}%` }}
+                          ></div>
+                        </div>
+                        <p className="text-xs text-white/40 mt-1">
+                          {pointsToNext > 0 
+                            ? `${pointsToNext} more points to Level ${level + 1}`
+                            : "Max level reached! 🎉"}
+                        </p>
+                      </div>
+
+                      <div className="pt-4 border-t border-white/10 space-y-3">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-white/60">Items Recycled</span>
+                          <span className="text-lg font-bold text-white">
+                            {transactionsLoading ? "..." : itemsRecycled}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-white/60">This Week</span>
+                          <span className="text-lg font-bold text-white">
+                            {transactionsLoading ? "..." : `+${pointsThisWeek} pts`}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-white/60">Total Earned</span>
+                          <span className="text-lg font-bold text-green-400">{userPoints} pts</span>
+                        </div>
+                      </div>
+                    </>
+                  );
+                })()}
               </div>
             </SpotlightCard>
 
@@ -294,37 +388,95 @@ const UserProfile = () => {
               </div>
 
               <div className="space-y-3">
-                <div className="flex items-center gap-3 p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
-                  <div className="text-2xl">🏆</div>
-                  <div className="flex-1">
-                    <p className="text-sm font-semibold text-white">First Recycle</p>
-                    <p className="text-xs text-white/50">Recycled your first item</p>
-                  </div>
-                </div>
+                {(() => {
+                  const itemsRecycled = transactions.length;
+                  
+                  const achievements = [
+                    {
+                      id: "first",
+                      icon: "🏆",
+                      name: "First Recycle",
+                      description: "Recycled your first item",
+                      threshold: 1,
+                      color: "yellow",
+                    },
+                    {
+                      id: "quick",
+                      icon: "⚡",
+                      name: "Quick Starter",
+                      description: "Recycled 10 items",
+                      threshold: 10,
+                      color: "blue",
+                    },
+                    {
+                      id: "warrior",
+                      icon: "🌟",
+                      name: "Eco Warrior",
+                      description: "Recycled 50 items",
+                      threshold: 50,
+                      color: "purple",
+                    },
+                    {
+                      id: "legend",
+                      icon: "💎",
+                      name: "Legend",
+                      description: "Recycled 100 items",
+                      threshold: 100,
+                      color: "pink",
+                    },
+                  ];
 
-                <div className="flex items-center gap-3 p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg">
-                  <div className="text-2xl">⚡</div>
-                  <div className="flex-1">
-                    <p className="text-sm font-semibold text-white">Quick Starter</p>
-                    <p className="text-xs text-white/50">Recycled 10 items</p>
-                  </div>
-                </div>
+                  return achievements.map((achievement) => {
+                    const unlocked = itemsRecycled >= achievement.threshold;
+                    const colorClasses = {
+                      yellow: "bg-yellow-500/10 border-yellow-500/20",
+                      blue: "bg-blue-500/10 border-blue-500/20",
+                      purple: "bg-purple-500/10 border-purple-500/20",
+                      pink: "bg-pink-500/10 border-pink-500/20",
+                    };
 
-                <div className="flex items-center gap-3 p-3 bg-white/5 border border-white/10 rounded-lg opacity-50">
-                  <div className="text-2xl">🌟</div>
-                  <div className="flex-1">
-                    <p className="text-sm font-semibold text-white">Eco Warrior</p>
-                    <p className="text-xs text-white/50">Recycle 50 items</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3 p-3 bg-white/5 border border-white/10 rounded-lg opacity-50">
-                  <div className="text-2xl">💎</div>
-                  <div className="flex-1">
-                    <p className="text-sm font-semibold text-white">Legend</p>
-                    <p className="text-xs text-white/50">Recycle 100 items</p>
-                  </div>
-                </div>
+                    return (
+                      <div
+                        key={achievement.id}
+                        className={`flex items-center gap-3 p-3 border rounded-lg transition-all duration-300 ${
+                          unlocked
+                            ? colorClasses[achievement.color as keyof typeof colorClasses]
+                            : "bg-white/5 border-white/10 opacity-50"
+                        }`}
+                      >
+                        <div className="text-2xl">{achievement.icon}</div>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2">
+                            <p className="text-sm font-semibold text-white">
+                              {achievement.name}
+                            </p>
+                            {unlocked && (
+                              <svg
+                                className="w-4 h-4 text-green-400"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                              >
+                                <path
+                                  fillRule="evenodd"
+                                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                  clipRule="evenodd"
+                                />
+                              </svg>
+                            )}
+                          </div>
+                          <p className="text-xs text-white/50">
+                            {achievement.description}
+                            {!unlocked && (
+                              <span className="ml-1">
+                                ({itemsRecycled}/{achievement.threshold})
+                              </span>
+                            )}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  });
+                })()}
               </div>
             </SpotlightCard>
           </div>

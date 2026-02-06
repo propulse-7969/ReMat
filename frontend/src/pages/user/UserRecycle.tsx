@@ -7,6 +7,7 @@ import QRScanner from "../components/QRScanner";
 import { useAuth } from "../../auth/useAuth";
 import { extractBinIdFromQR } from "../utils/getBinfromQR";
 import SpotlightCard from "../components/SpotlightCard";
+import toast from "react-hot-toast";
 
 
 interface BinResponse {
@@ -171,7 +172,7 @@ const UserRecycle = () => {
 
     } catch (error) {
       console.error("Error uploading image:", error);
-      alert("Failed to analyze waste. Please try again.");
+      toast.error("Failed to analyze waste. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -203,7 +204,7 @@ const UserRecycle = () => {
 
   const handleManualItemConfirm = () => {
     if (!selectedItem) {
-      alert("Please select an item");
+      toast.error("Please select an item");
       return;
     }
     
@@ -245,7 +246,7 @@ const UserRecycle = () => {
           "Transaction failed";
         throw new Error(message);
       }
-      alert(`Success! You earned ${data.points_earned} points. 🎉`);
+      toast.success(`Success! You earned ${data.points_earned} points. 🎉`);
       setDisplay(false);
       setResult(null);
       setScannedBinId(null);
@@ -253,7 +254,7 @@ const UserRecycle = () => {
       setConfirmationModalOpen(false);
     } catch (err) {
       console.error(err);
-      alert(err instanceof Error ? err.message : "Transaction failed. Please try again.");
+      toast.error(err instanceof Error ? err.message : "Transaction failed. Please try again.");
     } finally {
       setTxnLoading(false);
     }
@@ -372,7 +373,7 @@ const UserRecycle = () => {
               <div className="bg-transparent p-4 rounded-lg">
                 <CameraCapture
                   onCapture={(img) => { handleCapture(img); setCameraModalOpen(false); }}
-                  onError={(e) => alert(e)}
+                  onError={(e) => toast.error(e)}
                   facingMode="environment"
                   autoStop={true}
                   autoOpen={true}
@@ -418,7 +419,7 @@ const UserRecycle = () => {
                   onScanSuccess={(decodedText) => {
                     const binId = extractBinIdFromQR(decodedText) ?? decodedText.trim();
                     if (!binId) {
-                      alert("Invalid QR Code. Please try again.");
+                      toast.error("Invalid QR Code. Please try again.");
                       return;
                     }
                     setScannedBinId(binId);

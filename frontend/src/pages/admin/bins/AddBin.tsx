@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MapView from "../../components/MapView";
 import SpotlightCard from "../../components/SpotlightCard";
+import toast from "react-hot-toast";
 
 interface Location {
   lat: number;
@@ -100,7 +101,7 @@ const AddBin = () => {
     setSubmitting(true);
 
     try {
-      await fetch("http://127.0.0.1:8000/api/bins", {
+      const response = await fetch("http://127.0.0.1:8000/api/bins", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -112,11 +113,17 @@ const AddBin = () => {
         })
       });
 
-      alert("Bin created successfully");
+      if (!response.ok) {
+        throw new Error("Failed to create bin");
+      }
+
+      toast.success("Bin created successfully");
       navigate("/admin/bins");
     } catch (err) {
       console.error("Create bin failed", err);
-      setError("Failed to create bin. Please try again.");
+      const errorMessage = err instanceof Error ? err.message : "Failed to create bin. Please try again.";
+      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setSubmitting(false);
     }

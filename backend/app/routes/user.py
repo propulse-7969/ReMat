@@ -126,6 +126,7 @@ def leaderboard(
             "id": user.id,
             "name": user.name,
             "points": user.points,
+            "role": user.role
         }
         for user in results
     ]
