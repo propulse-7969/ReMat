@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MapView from "../../components/MapView";
 import SpotlightCard from "../../components/SpotlightCard";
+import {Toaster} from "react-hot-toast";
 
 interface Bin {
   id: string;
@@ -102,6 +103,7 @@ const ViewBins = () => {
 
   return (
     <div className="min-h-screen pb-0">
+      <Toaster />
       <div className="max-w-350 mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
         {/* Header */}
         <div className="mb-8">

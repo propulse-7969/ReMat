@@ -3,6 +3,7 @@ import type { FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../auth/useAuth";
 import logo from "../../login-logo.png"
+import toast, { Toaster } from "react-hot-toast";
 
 const Signup = () => {
   const { signup, signupWithGoogle } = useAuth();
@@ -34,6 +35,7 @@ const Signup = () => {
     catch (err: unknown) {
       const error = err as {code?: string, message?: string};
       if (error.message?.toLowerCase().includes("exists")) {
+        toast.error("You have already signed up with this email! Please login.")
         navigate("/auth/login");
         return;
       }
@@ -54,7 +56,7 @@ const Signup = () => {
       const error = err as {code?: string, message?: string};
 
       if(error.message==="Account exists") {
-        alert("Account already exists! Please login")
+        toast.error("Account already exists! Please login")
         navigate("/auth/login", {replace: true})
       }
 
@@ -66,6 +68,7 @@ const Signup = () => {
 
   return (
     <div className="min-h-screen bg-linear-to-br from-black via-emerald-950 to-cyan-950 flex items-center justify-center p-4 transition-colors duration-300">
+      <Toaster />
       {/* Decorative elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-20 w-72 h-72 bg-emerald-500/20 rounded-full blur-3xl"></div>

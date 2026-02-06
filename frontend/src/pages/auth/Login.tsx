@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../auth/useAuth";
 import RoleRedirect from "../../app/RoleRedirect";
 import logo from "../../../src/login-logo.png"
+import toast, { Toaster } from "react-hot-toast";
 
 const Login = () => {
   const { login, loginWithGoogle } = useAuth();
@@ -22,13 +23,14 @@ const Login = () => {
     try {
       setLoading(true);
       await login(email, password);
+      toast.success("Logged in successfully!")
       navigate("/", { replace: true }); 
     } 
     catch (err: unknown) {
       const error = err as {code?: string, message?: string};
 
       if(error.message=="Firebase: Error (auth/invalid-credential).") {
-        alert("Please sign up first")
+        toast.error("Please sign up first")
         navigate("/auth/signup", {replace: true})
         return
       }
@@ -45,13 +47,14 @@ const Login = () => {
     try {
       setLoading(true);
       await loginWithGoogle();
+      toast.success("Logged in successfully!")
       navigate("/", {replace: true});
     } 
     catch (err: unknown) {
       const error = err as {code?: string, message?: string};
 
       if(error.message==="USER_NOT_REGISTERED") {
-        alert("Please register your account first!")
+        toast.error("Please register your account first!")
         navigate("/auth/signup", {replace: true})
         return;
       }
@@ -64,6 +67,7 @@ const Login = () => {
 
   return (
     <div className="min-h-screen bg-linear-to-br from-black via-emerald-950 to-cyan-950 flex items-center justify-center p-4 transition-colors duration-300">
+      <Toaster />
       {/* Decorative elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 right-20 w-72 h-72 bg-emerald-500/20 rounded-full blur-3xl"></div>

@@ -5,6 +5,7 @@ import MapView from "../components/MapView";
 import type { Bin } from "../../types";
 import SpotlightCard from "../components/SpotlightCard";
 import ElectricBorder from "../components/ElectricBorder";
+import { Toaster } from "react-hot-toast";
 
 
 const API_BASE =
@@ -128,6 +129,7 @@ const UserDashboard = () => {
   
   return (
     <div className="min-h-screen pb-0">
+      <Toaster />
       {/* Main Content */}
       <div className="max-w-350 mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
         {/* Header Section */}

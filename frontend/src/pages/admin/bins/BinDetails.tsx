@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import MapView from "../../components/MapView";
 import SpotlightCard from "../../components/SpotlightCard";
+import toast, {Toaster} from "react-hot-toast";
 
 interface Bin {
   id: string;
@@ -82,10 +83,10 @@ const BinDetails = () => {
           status: bin.status
         })
       });
-      alert("Bin updated successfully");
+      toast.success("Bin updated successfully");
     } catch (err) {
       console.error("Failed to update bin", err);
-      alert("Failed to update bin");
+      toast.error("Failed to update bin");
     } finally {
       setSaving(false);
     }
@@ -97,11 +98,11 @@ const BinDetails = () => {
       await fetch(`http://127.0.0.1:8000/api/bins/${bin.id}`, {
         method: "DELETE"
       });
-      alert("Bin deleted");
+      toast.success("Bin deleted");
       navigate("/admin/bins");
     } catch (err) {
       console.error("Failed to delete bin", err);
-      alert("Failed to delete bin");
+      toast.error("Failed to delete bin");
     } finally {
       setDeleting(false);
       setShowDeleteConfirm(false);
@@ -123,6 +124,7 @@ const BinDetails = () => {
 
   return (
     <div className="min-h-screen pb-0">
+      <Toaster />
       <div className="max-w-350 mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
         {/* Header */}
         <div className="mb-8">

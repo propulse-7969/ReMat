@@ -3,6 +3,7 @@ import { useAuth } from "../../auth/useAuth";
 import { deleteUser } from "firebase/auth";
 import { auth } from "../../services/firebase";
 import SpotlightCard from "../components/SpotlightCard";
+import toast, {Toaster} from "react-hot-toast";
 
 const API_BASE = (import.meta.env.VITE_API_BASE_URL as string) || "http://127.0.0.1:8000";
 
@@ -33,26 +34,71 @@ const UserProfile = () => {
   }, [profile?.uid]);
 
   const handleDeleteAccount = async () => {
-    if (!confirm("Are you sure you want to delete your account? This action cannot be undone and you will lose all your points and recycling history.")) return;
-    if (!token) return;
-    setDeleting(true);
-    try {
-      const res = await fetch(`${API_BASE}/auth/me`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (!res.ok) throw new Error("Failed to delete account");
-      const currentUser = auth.currentUser;
-      if (currentUser) await deleteUser(currentUser);
-    } catch (err) {
-      console.error(err);
-      alert("Failed to delete account. Please try again.");
-    } finally {
-      setDeleting(false);
-      logout();
-    }
-  };
+  if (!token) return;
 
+  toast(
+    (t) => (
+      <div className="flex flex-col gap-3">
+        <p className="font-medium">
+          Delete your account permanently?
+        </p>
+        <p className="text-sm text-gray-500">
+          This action cannot be undone. You will lose all points and recycling history.
+        </p>
+
+        <div className="flex justify-end gap-2 mt-2">
+          <button
+            onClick={() => toast.dismiss(t.id)}
+            className="px-3 py-1 text-sm rounded bg-gray-200 hover:bg-gray-300"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={async () => {
+              toast.dismiss(t.id);
+              setDeleting(true);
+
+              const deletePromise = (async () => {
+                const res = await fetch(`${API_BASE}/auth/me`, {
+                  method: "DELETE",
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                });
+
+                if (!res.ok) {
+                  throw new Error("Failed to delete account");
+                }
+
+                const currentUser = auth.currentUser;
+                if (currentUser) {
+                  await deleteUser(currentUser);
+                }
+              })();
+
+              toast.promise(deletePromise, {
+                loading: "Deleting your account…",
+                success: "Account deleted successfully 👋",
+                error: "Failed to delete account. Please try again.",
+              });
+
+              try {
+                await deletePromise;
+              } finally {
+                setDeleting(false);
+                logout();
+              }
+            }}
+            className="px-3 py-1 text-sm rounded bg-red-600 text-white hover:bg-red-700"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    ),
+    { duration: Infinity }
+  );
+};
   const handleLogout = () => {
     logout();
   };
@@ -70,6 +116,7 @@ const UserProfile = () => {
 
   return (
     <div className="min-h-screen">
+      <Toaster />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
         {/* Header */}
         <div className="mb-8">

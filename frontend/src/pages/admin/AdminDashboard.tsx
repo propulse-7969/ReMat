@@ -4,6 +4,7 @@ import { useAuth } from "../../auth/useAuth";
 import MapView from "../components/MapView";
 import { type Bin } from "../../types";
 import SpotlightCard from "../components/SpotlightCard";
+import toast, {Toaster} from "react-hot-toast";
 
 const AdminDashboard = () => {
   const { profile, logout } = useAuth();
@@ -49,9 +50,11 @@ const AdminDashboard = () => {
   const handleLogout = async () => {
     try {
       await logout();
+      toast.success("Logged out successfully")
       navigate("/auth/login", { replace: true });
     } catch (err) {
       console.error("Logout failed", err);
+      toast.error("Failed to logout!")
     }
   };
 
@@ -74,6 +77,7 @@ const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen pb-0">
+      <Toaster />
       {/* Main Content */}
       <div className="max-w-350 mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
         {/* Header Section */}
@@ -90,9 +94,9 @@ const AdminDashboard = () => {
                 <div className="flex items-center gap-3">
                   <button
                     onClick={handleLogout}
-                    className="px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white font-semibold rounded-lg transition-all duration-200 flex items-center gap-2 group"
+                    className="px-6 py-3 bg-red-600/10 hover:bg-red-500/20 border border-red-800/30 hover:border-red-500/50 text-red-500 hover:text-red-600 font-semibold rounded-lg transition-all duration-200 flex items-center gap-2 group"
                   >
-                    <svg className="w-5 h-5 text-white/60 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 text-red-500 group-hover:text-red-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                     </svg>
                     Sign Out

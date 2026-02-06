@@ -291,7 +291,7 @@ const UserRewards = () => {
                   key={prize.id}
                   className="bg-linear-to-br from-yellow-500/10 to-yellow-600/5 backdrop-blur-xl border border-yellow-500/30 rounded-xl overflow-hidden hover:shadow-2xl hover:shadow-yellow-500/20 transition-all duration-300 group"
                 >
-                  {/* Image Placeholder */}
+                  
                   <div className="relative h-56 bg-linear-to-br from-white/10 to-white/5 flex items-center justify-center overflow-hidden">
                     <div className="absolute inset-0 bg-linear-to-br from-yellow-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     <div className="text-6xl group-hover:scale-110 transition-transform duration-300">
