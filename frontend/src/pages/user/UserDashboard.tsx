@@ -10,12 +10,24 @@ import ElectricBorder from "../components/ElectricBorder";
 const API_BASE =
   (import.meta.env.VITE_API_BASE_URL as string) || "http://127.0.0.1:8000";
 
+type Transaction = {
+  id: string;
+  waste_type: string;
+  bin_id: string;
+  created_at: string;
+  points_awarded: number;
+};
+
 const UserDashboard = () => {
   const { profile } = useAuth();
   const navigate = useNavigate();
   const [bins, setBins] = useState<Bin[]>([]);
   const [loading, setLoading] = useState(true);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [statsLoading, setStatsLoading] = useState(true);
+
+  const userId = profile?.uid;
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -25,6 +37,34 @@ const UserDashboard = () => {
       );
     }
   }, []);
+
+  // Fetch all transactions for stats calculation
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      if (!userId) return;
+      
+      setStatsLoading(true);
+      try {
+        const res = await fetch(
+          `${API_BASE}/user/transactions/${userId}?page=1&limit=10000`
+        );
+
+        if (!res.ok) {
+          throw new Error("Failed to fetch transactions");
+        }
+
+        const data = await res.json();
+        setTransactions(data);
+      } catch (err) {
+        console.error(err);
+        setTransactions([]);
+      } finally {
+        setStatsLoading(false);
+      }
+    };
+
+    fetchTransactions();
+  }, [userId]);
 
   useEffect(() => {
     const fetchBins = async () => {
@@ -51,6 +91,18 @@ const UserDashboard = () => {
     };
     fetchBins();
   }, []);
+
+  // Calculate quick stats
+  const now = new Date();
+  const startOfWeek = new Date(now);
+  startOfWeek.setDate(now.getDate() - now.getDay()); // Sunday
+  startOfWeek.setHours(0, 0, 0, 0);
+
+  const pointsThisWeek = transactions
+    .filter(txn => new Date(txn.created_at) >= startOfWeek)
+    .reduce((sum, txn) => sum + txn.points_awarded, 0);
+
+  const itemsRecycled = transactions.length;
 
   const activeBins = bins.filter((b) => b.status === "active");
   const totalCapacity = bins.reduce((sum, b) => sum + (b.capacity || 0), 0);
@@ -90,7 +142,7 @@ const UserDashboard = () => {
                   <p className="text-base text-white/60">Track your impact and manage e-waste efficiently</p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="px-6 py-4 bg-linear-to-br from-green-500/20 to-green-600/10 border border-green-500/30 rounded-xl backdrop-blur-sm">
+                  <div className="px-6 py-4 bg-gradient-to-br from-green-500/20 to-green-600/10 border border-green-500/30 rounded-xl backdrop-blur-sm">
                     <p className="text-xs text-green-300/80 uppercase tracking-wider font-semibold mb-1">Total Points</p>
                     <p className="text-3xl font-bold text-green-400">{profile.points ?? 0}</p>
                   </div>
@@ -101,37 +153,37 @@ const UserDashboard = () => {
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-8">
           {/* Points Card */}
-          <SpotlightCard className="bg-linear-to-br from-green-500/10 to-green-600/5 backdrop-blur-xl border border-green-500/20 rounded-xl p-6 hover:shadow-xl hover:shadow-green-500/10 transition-all duration-300 group">
+          <SpotlightCard className="bg-gradient-to-br from-green-500/10 to-green-600/5 backdrop-blur-xl border border-green-500/20 rounded-xl p-6 hover:shadow-xl hover:shadow-green-500/10 transition-all duration-300 group">
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 bg-green-500/20 rounded-lg group-hover:scale-110 transition-transform duration-300">
                 <svg className="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
                 </svg>
               </div>
-              <span className="text-xs font-semibold text-green-400 bg-green-500/20 px-3 py-1 rounded-full">+12%</span>
+              {/* <span className="text-xs font-semibold text-green-400 bg-green-500/20 px-3 py-1 rounded-full">+12%</span> */}
             </div>
             <p className="text-sm text-white/50 mb-1 font-medium">Your Points</p>
             <p className="text-3xl font-bold text-white">{profile.points ?? 0}</p>
           </SpotlightCard>
 
           {/* Active Bins Card */}
-          <SpotlightCard className="bg-linear-to-br from-blue-500/10 to-blue-600/5 backdrop-blur-xl border border-blue-500/20 rounded-xl p-6 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300 group">
+          <SpotlightCard className="bg-gradient-to-br from-blue-500/10 to-blue-600/5 backdrop-blur-xl border border-blue-500/20 rounded-xl p-6 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300 group">
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 bg-blue-500/20 rounded-lg group-hover:scale-110 transition-transform duration-300">
                 <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                 </svg>
               </div>
-              <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
+              {/* <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div> */}
             </div>
             <p className="text-sm text-white/50 mb-1 font-medium">Active Bins</p>
             <p className="text-3xl font-bold text-white">{activeBins.length}</p>
           </SpotlightCard>
 
           {/* Total Bins Card */}
-          <SpotlightCard className="bg-linear-to-br from-purple-500/10 to-purple-600/5 backdrop-blur-xl border border-purple-500/20 rounded-xl p-6 hover:shadow-xl hover:shadow-purple-500/10 transition-all duration-300 group">
+          <SpotlightCard className="bg-gradient-to-br from-purple-500/10 to-purple-600/5 backdrop-blur-xl border border-purple-500/20 rounded-xl p-6 hover:shadow-xl hover:shadow-purple-500/10 transition-all duration-300 group">
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 bg-purple-500/20 rounded-lg group-hover:scale-110 transition-transform duration-300">
                 <svg className="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -144,7 +196,7 @@ const UserDashboard = () => {
           </SpotlightCard>
 
           {/* Avg Fill Level Card */}
-          <SpotlightCard className="bg-linear-to-br from-orange-500/10 to-orange-600/5 backdrop-blur-xl border border-orange-500/20 rounded-xl p-6 hover:shadow-xl hover:shadow-orange-500/10 transition-all duration-300 group">
+          {/* <SpotlightCard className="bg-gradient-to-br from-orange-500/10 to-orange-600/5 backdrop-blur-xl border border-orange-500/20 rounded-xl p-6 hover:shadow-xl hover:shadow-orange-500/10 transition-all duration-300 group">
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 bg-orange-500/20 rounded-lg group-hover:scale-110 transition-transform duration-300">
                 <svg className="w-6 h-6 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -154,7 +206,7 @@ const UserDashboard = () => {
             </div>
             <p className="text-sm text-white/50 mb-1 font-medium">Avg Fill Level</p>
             <p className="text-3xl font-bold text-white">{avgFillPercentage}%</p>
-          </SpotlightCard>
+          </SpotlightCard> */}
         </div>
 
         {/* Main Content Grid */}
@@ -194,20 +246,26 @@ const UserDashboard = () => {
                 </svg>
                 Quick Stats
               </h3>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between p-4 bg-white/5 hover:bg-white/10 rounded-lg transition-colors duration-200">
-                  <span className="text-white/60 text-sm font-medium">This Week</span>
-                  <span className="text-white font-semibold text-lg">+45 pts</span>
+              {statsLoading ? (
+                <div className="flex items-center justify-center py-8">
+                  <div className="w-8 h-8 border-4 border-white/20 border-t-white rounded-full animate-spin"></div>
                 </div>
-                <div className="flex items-center justify-between p-4 bg-white/5 hover:bg-white/10 rounded-lg transition-colors duration-200">
-                  <span className="text-white/60 text-sm font-medium">Items Recycled</span>
-                  <span className="text-white font-semibold text-lg">12</span>
+              ) : (
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between p-4 bg-white/5 hover:bg-white/10 rounded-lg transition-colors duration-200">
+                    <span className="text-white/60 text-sm font-medium">This Week</span>
+                    <span className="text-white font-semibold text-lg">+{pointsThisWeek} pts</span>
+                  </div>
+                  <div className="flex items-center justify-between p-4 bg-white/5 hover:bg-white/10 rounded-lg transition-colors duration-200">
+                    <span className="text-white/60 text-sm font-medium">Items Recycled</span>
+                    <span className="text-white font-semibold text-lg">{itemsRecycled}</span>
+                  </div>
+                  <div className="flex items-center justify-between p-4 bg-white/5 hover:bg-white/10 rounded-lg transition-colors duration-200">
+                    <span className="text-white/60 text-sm font-medium">Total Points</span>
+                    <span className="text-green-400 font-semibold text-lg">{profile.points ?? 0}</span>
+                  </div>
                 </div>
-                <div className="flex items-center justify-between p-4 bg-white/5 hover:bg-white/10 rounded-lg transition-colors duration-200">
-                  <span className="text-white/60 text-sm font-medium">Leaderboard Rank</span>
-                  <span className="text-yellow-400 font-semibold text-lg">#247</span>
-                </div>
-              </div>
+              )}
             </SpotlightCard>
           </div>
 

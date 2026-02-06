@@ -4,6 +4,7 @@ import PillNav from "../pages/components/PillNav";
 import Grainient from "../pages/components/Granient";
 import logo from "../../public/tab-logo.png"
 import Footer from "../pages/components/Footer";
+import GradualBlur from "../pages/components/GradualBlur";
 
 
 const UserLayout = () => {
@@ -20,9 +21,9 @@ const UserLayout = () => {
             {/* Grainient Background */}
             <div className="fixed inset-0 w-full h-full -z-10">
                 <Grainient
-                    color1="#555555"
-                    color2="#24641b"
-                    color3="#142d91"
+                    color1="#1A1919"
+                    color2="#0d7000"
+                    color3="#00556e"
                     timeSpeed={0.25}
                     colorBalance={0}
                     warpStrength={1}
@@ -45,8 +46,26 @@ const UserLayout = () => {
                 />
             </div>
 
+            {/* Gradual Blur at Top - Fixed */}
+            <section style={{ position: 'fixed', height: '500px', overflow: 'hidden', top: 0, left: 0, right: 0, zIndex: 10 }}>
+                <div style={{ height: '100%', overflow: 'auto', padding: '6rem 2rem' }}>
+                    {/* Content Here - such as an image or text */}
+                </div>
+                
+                <GradualBlur
+                    target="parent"
+                    position="top"
+                    height="7rem"
+                    strength={4}
+                    divCount={5}
+                    curve="bezier"
+                    exponential
+                    opacity={1}
+                />
+            </section>
+
             {/* Navbar */}
-            <div className="relative w-full flex items-center justify-center">
+            <div className="relative w-full flex items-center justify-center" style={{ zIndex: 20 }}>
                 <PillNav
                     logo={logo}
                     logoAlt="Company Logo"
