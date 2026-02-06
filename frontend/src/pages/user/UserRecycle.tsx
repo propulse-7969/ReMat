@@ -20,18 +20,56 @@ interface BinResponse {
 
 // Manual override points from your config
 const MANUAL_OVERRIDE_POINTS: Record<string, number> = {
-  "PCB": 90,
-  "Battery": 60,
-  "Mobile": 80,
-  "Player": 50,
+  // 🔋 High environmental risk
+  "Battery": 80,
+  "Power Bank": 90,
+  "UPS": 140,
+
+  // 🧠 High value components
+  "PCB": 100,
+  "Motherboard": 120,
+  "Hard Disk": 70,
+  "SSD": 80,
+  "RAM": 40,
+
+  // 📱 Personal electronics
+  "Mobile": 90,
+  "Smartphone": 95,
+  "Laptop": 120,
+  "Tablet": 80,
+  "Smartwatch": 50,
+
+  // 🖥️ Peripherals
   "Mouse": 15,
-  "Keyboard": 20,
-  "Printer": 120,
-  "Microwave": 150,
-  "Television": 180,
-  "Laptop": 100,
-  "Other": 50
+  "Keyboard": 25,
+  "Webcam": 30,
+  "Speaker": 40,
+  "Earphones": 20,
+  "Headphones": 35,
+
+  // 🔌 Accessories & cables
+  "Charger": 30,
+  "Cable": 10,
+  "Adapter": 35,
+  "Extension Board": 45,
+
+  // 🎮 Media & entertainment
+  "DVD Player": 50,
+  "Set Top Box": 60,
+  "Game Console": 100,
+
+  // 🖨️ Office electronics
+  "Printer": 130,
+  "Scanner": 90,
+  "Router": 60,
+  "Modem": 55,
+
+  // 🍳 Large appliances
+  "Microwave": 170,
+  "Television": 200,
+  "Monitor": 150
 };
+
 
 const UserRecycle = () => {
   const { token } = useAuth();
