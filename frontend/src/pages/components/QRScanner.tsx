@@ -66,7 +66,7 @@ export default function QRScanner({ onScanSuccess, onClose }: Props) {
     return () => stopScan();
   }, []);
 
-  // If already scanned successfully, don't show anything
+  
   if (scanned) return null;
 
   return (

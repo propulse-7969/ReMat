@@ -6,8 +6,9 @@ import type { Bin, DetectionResult } from "../../types";
 import QRScanner from "../components/QRScanner";
 import { useAuth } from "../../auth/useAuth";
 import { extractBinIdFromQR } from "../utils/getBinfromQR";
-import SpotlightCard from "../components/SpotlightCard";
+import SpotlightCard from "../components/UIComponents/SpotlightCard";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 
 interface BinResponse {
@@ -74,6 +75,7 @@ const MANUAL_OVERRIDE_POINTS: Record<string, number> = {
 
 
 const UserRecycle = () => {
+  const navigate = useNavigate()
   const { token } = useAuth();
   const [cameraModalOpen, setCameraModalOpen] = useState(false);
   const [display, setDisplay] = useState<boolean>(false);
@@ -252,6 +254,7 @@ const UserRecycle = () => {
       setScannedBinId(null);
       setSelectedItem("");
       setConfirmationModalOpen(false);
+      navigate("/user/thankyou");
     } catch (err) {
       console.error(err);
       toast.error(err instanceof Error ? err.message : "Transaction failed. Please try again.");

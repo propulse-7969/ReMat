@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../../auth/useAuth";
 import { deleteUser } from "firebase/auth";
 import { auth } from "../../services/firebase";
-import SpotlightCard from "../components/SpotlightCard";
+import SpotlightCard from "../components/UIComponents/SpotlightCard";
 import toast, {Toaster} from "react-hot-toast";
 
 const API_BASE = (import.meta.env.VITE_API_BASE_URL as string) || "http://127.0.0.1:8000";

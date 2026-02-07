@@ -1,16 +1,17 @@
 import { Outlet } from "react-router-dom";
 //import NavBar from "../pages/components/NavBar";
-import PillNav from "../pages/components/PillNav";
-import Grainient from "../pages/components/Granient";
+import PillNav from "../pages/components/UIComponents/PillNav";
+import Grainient from "../pages/components/UIComponents/Granient";
 import logo from "../../public/tab-logo.png"
 import Footer from "../pages/components/Footer";
-import GradualBlur from "../pages/components/GradualBlur";
+import GradualBlur from "../pages/components/UIComponents/GradualBlur";
 
 
 const UserLayout = () => {
     const items = [
                     { label: 'Dashboard', href: '/user/dashboard' },
                     { label: 'Recycle', href: '/user/recycle' },
+                    { label: 'Request Pickup', href: '/user/pickup-requests'},
                     { label: 'Rewards', href: '/user/rewards' },
                     { label: 'Leaderboard', href: '/user/leaderboard' },
                     { label: 'Transactions', href: '/user/transactions' },

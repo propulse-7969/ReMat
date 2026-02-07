@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "../../auth/useAuth";
-import SpotlightCard from "../components/SpotlightCard";
+import SpotlightCard from "../components/UIComponents/SpotlightCard";
 import toast from "react-hot-toast";
 
 type Prize = {

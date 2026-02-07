@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import SpotlightCard from "../../components/SpotlightCard";
+import SpotlightCard from "../../components/UIComponents/SpotlightCard";
 // import { useAuth } from "../../../auth/useAuth";
 import toast, { Toaster } from "react-hot-toast";
 

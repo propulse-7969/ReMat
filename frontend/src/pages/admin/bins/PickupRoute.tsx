@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import MapView from "../../components/MapView";
 import type { Bin } from "../../../types";
-import SpotlightCard from "../../components/SpotlightCard";
+import SpotlightCard from "../../components/UIComponents/SpotlightCard";
 
 interface Location {
   lat: number;

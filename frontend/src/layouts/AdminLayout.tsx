@@ -1,9 +1,9 @@
 import { Outlet } from "react-router-dom";
-import Grainient from "../pages/components/Granient";
+import Grainient from "../pages/components/UIComponents/Granient";
 import Footer from "../pages/components/Footer";
-import PillNav from "../pages/components/PillNav";
+import PillNav from "../pages/components/UIComponents/PillNav";
 import logo from "../../src/tab-logo.png"
-import GradualBlur from "../pages/components/GradualBlur";
+import GradualBlur from "../pages/components/UIComponents/GradualBlur";
 
 const AdminLayout = () => {
     const items = [
@@ -11,8 +11,8 @@ const AdminLayout = () => {
                     { label: 'All Bins', href: '/admin/bins' },
                     { label: 'Add Bin', href: '/admin/bins/add' },
                     { label: 'Collect Waste', href: '/admin/route' },
+                    { label: 'Pickup Requests', href: '/admin/pickup-requests'},
                     { label: 'View Analytics', href: '/admin/analytics' },
-                    // { label: 'Leaderboard', href: '/user/leaderboard' },
                 ];
     return (
         <div className="relative min-h-screen w-full">

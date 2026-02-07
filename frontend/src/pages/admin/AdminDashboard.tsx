@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../auth/useAuth";
 import MapView from "../components/MapView";
 import { type Bin } from "../../types";
-import SpotlightCard from "../components/SpotlightCard";
+import SpotlightCard from "../components/UIComponents/SpotlightCard";
 import toast, {Toaster} from "react-hot-toast";
 
 const AdminDashboard = () => {

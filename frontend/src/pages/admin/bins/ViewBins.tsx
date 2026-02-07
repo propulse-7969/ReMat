@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MapView from "../../components/MapView";
-import SpotlightCard from "../../components/SpotlightCard";
+import SpotlightCard from "../../components/UIComponents/SpotlightCard";
 import {Toaster} from "react-hot-toast";
 
 interface Bin {

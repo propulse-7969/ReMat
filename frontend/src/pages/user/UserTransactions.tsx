@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../../auth/useAuth";
-import SpotlightCard from "../components/SpotlightCard";
+import SpotlightCard from "../components/UIComponents/SpotlightCard";
 
 const PAGE_SIZE = 10;
 

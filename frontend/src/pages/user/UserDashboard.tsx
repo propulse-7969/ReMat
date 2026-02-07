@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../auth/useAuth";
 import MapView from "../components/MapView";
 import type { Bin } from "../../types";
-import SpotlightCard from "../components/SpotlightCard";
-import ElectricBorder from "../components/ElectricBorder";
+import SpotlightCard from "../components/UIComponents/SpotlightCard";
+import ElectricBorder from "../components/UIComponents/ElectricBorder";
 import { Toaster } from "react-hot-toast";
 
 

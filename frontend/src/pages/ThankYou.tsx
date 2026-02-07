@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import SpotlightCard from "./components/SpotlightCard";
+import SpotlightCard from "./components/UIComponents/SpotlightCard";
+import { Toaster } from "react-hot-toast";
 
 type ConfettiPiece = {
   left: string;
@@ -49,6 +50,7 @@ const ThankYouPage = () => {
 
   return (
     <div className="min-h-screen bg-black relative overflow-hidden">
+        <Toaster />
       {/* Animated background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 via-emerald-500/10 to-green-600/10 animate-pulse"></div>
       

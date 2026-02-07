@@ -16,3 +16,26 @@ export interface DetectionResult {
   points_to_earn: number
   estimated_value?: number  // deprecated, use base_points
 }
+
+
+export type PickupStatus =
+  | "open"
+  | "accepted"
+  | "rejected"
+  | "cancelled";
+
+export interface PickupRequest {
+  id: string;
+  image_url: string;
+  e_waste_type: string;
+  preferred_datetime: string;
+  contact_number: string;
+  status: PickupStatus;
+  points_awarded?: number | null;
+  rejection_reason?: string | null;
+  address_text?: string | null;
+
+  latitude?: number;
+  longitude?: number;
+  created_at: string;
+}
