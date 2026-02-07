@@ -13,6 +13,7 @@ const ProtectedRoute = ({ children, role }: ProtectedRouteProps) => {
   // Updated loading component matching your project's green theme
 
     if (loading) {
+      document.body.style.backgroundColor = "black";
       return (
         <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
           {/* Animated background gradient - Green theme */}
