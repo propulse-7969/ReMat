@@ -2,7 +2,7 @@ import { Navigate } from "react-router-dom";
 import { useAuth } from "../auth/useAuth";
 
 const RoleRedirect = () => {
-  const { profile, loading } = useAuth();
+  const { profile} = useAuth();
 
   if (!profile) return null;
 
