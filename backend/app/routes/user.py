@@ -10,6 +10,8 @@ from app.services.transaction_service import handle_deposit
 import os
 from datetime import datetime
 import shutil
+import base64
+from io import BytesIO
 from app.services.waste_detector import predict_waste
 
 router = APIRouter(prefix="/user", tags=["User"])
@@ -20,7 +22,12 @@ class RecyclePayload(BaseModel):
     base_points: int | None = None  
     estimated_value: int | None = None  
     confidence: float | None = None
-    user_override: bool = False  
+    user_override: bool = False
+
+
+# NEW: Pydantic model for base64 image
+class Base64ImagePayload(BaseModel):
+    image: str  # base64 encoded image string
 
 
 _BACKEND_ROOT = Path(__file__).resolve().parent.parent.parent
@@ -40,6 +47,8 @@ def get_me(user_id: str, db: Session = Depends(get_db)):
 
     return user
 
+
+# ORIGINAL endpoint - keep for file uploads
 @router.post("/detect-waste")
 async def detect_waste(image: UploadFile = File(...)):
     allowed_extensions = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
@@ -89,6 +98,81 @@ async def detect_waste(image: UploadFile = File(...)):
         )
     finally:
         await image.close()
+
+
+# NEW endpoint - for base64 images (Android/iOS)
+@router.post("/detect-waste-base64")
+async def detect_waste_base64(payload: Base64ImagePayload):
+    filepath = None
+    
+    try:
+        # Extract base64 string
+        image_data = payload.image
+        
+        # Remove data URL prefix if present (e.g., "data:image/jpeg;base64,")
+        if ',' in image_data:
+            header, image_data = image_data.split(',', 1)
+            # Extract file extension from header
+            if 'image/' in header:
+                file_extension = header.split('image/')[-1].split(';')[0]
+            else:
+                file_extension = 'jpg'
+        else:
+            file_extension = 'jpg'
+        
+        # Validate extension
+        allowed_extensions = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
+        if file_extension not in allowed_extensions:
+            file_extension = 'jpg'
+        
+        # Decode base64
+        try:
+            image_bytes = base64.b64decode(image_data)
+        except Exception as e:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Invalid base64 encoding: {str(e)}"
+            )
+        
+        # Generate unique filename
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        filename = f"waste_{timestamp}.{file_extension}"
+        filepath = os.path.join(UPLOAD_FOLDER, filename)
+        
+        # Ensure upload directory exists
+        os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+        
+        # Save decoded image
+        with open(filepath, "wb") as f:
+            f.write(image_bytes)
+        
+        # Predict using the model
+        prediction_result = predict_waste(filepath)
+        
+        return {
+            "waste_type": prediction_result["waste_type"],
+            "confidence": prediction_result["confidence"],
+            "base_points": prediction_result["base_points"],
+            "points_to_earn": prediction_result["points_to_earn"],
+            "estimated_value": prediction_result["estimated_value"],
+            "image_path": filepath,
+            "all_probabilities": prediction_result.get("all_probabilities", {})
+        }
+        
+    except HTTPException:
+        # Re-raise HTTP exceptions
+        if filepath and os.path.exists(filepath):
+            os.remove(filepath)
+        raise
+    except Exception as e:
+        # Clean up the uploaded file if something goes wrong
+        if filepath and os.path.exists(filepath):
+            os.remove(filepath)
+        raise HTTPException(
+            status_code=500, 
+            detail=f"Failed to process image: {str(e)}"
+        )
+
 
 @router.get("/transactions/{user_id}")
 def get_transactions(user_id: str, page: int=1, limit: int=10,  db: Session = Depends(get_db)):

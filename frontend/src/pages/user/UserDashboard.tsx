@@ -6,10 +6,9 @@ import type { Bin } from "../../types";
 import SpotlightCard from "../components/SpotlightCard";
 import ElectricBorder from "../components/ElectricBorder";
 import { Toaster } from "react-hot-toast";
-
-
-const API_BASE =
-  (import.meta.env.VITE_API_BASE_URL as string) || "http://127.0.0.1:8000";
+import { API_BASE } from "../../config/api";
+import { Capacitor } from '@capacitor/core';
+import { Geolocation } from '@capacitor/geolocation';
 
 type Transaction = {
   id: string;
@@ -30,13 +29,37 @@ const UserDashboard = () => {
 
   const userId = profile?.uid;
 
+  // Get user location - works on both web and mobile
   useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => setUserLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
-        () => {}
-      );
-    }
+    const getUserLocation = async () => {
+      try {
+        if (Capacitor.isNativePlatform()) {
+          // Use Capacitor Geolocation for native mobile
+          const position = await Geolocation.getCurrentPosition();
+          setUserLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+        } else {
+          // Use web geolocation API for browser
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+              (pos) => setUserLocation({ 
+                lat: pos.coords.latitude, 
+                lng: pos.coords.longitude 
+              }),
+              (error) => {
+                console.error("Error getting location:", error);
+              }
+            );
+          }
+        }
+      } catch (error) {
+        console.error("Error getting location:", error);
+      }
+    };
+
+    getUserLocation();
   }, []);
 
   // Fetch all transactions for stats calculation
@@ -161,13 +184,12 @@ const UserDashboard = () => {
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 bg-green-500/20 rounded-lg group-hover:scale-110 transition-transform duration-300">
                 <svg className="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              {/* <span className="text-xs font-semibold text-green-400 bg-green-500/20 px-3 py-1 rounded-full">+12%</span> */}
             </div>
-            <p className="text-sm text-white/50 mb-1 font-medium">Your Points</p>
-            <p className="text-3xl font-bold text-white">{profile.points ?? 0}</p>
+            <p className="text-sm text-white/50 mb-1 font-medium">Items Recycled</p>
+            <p className="text-3xl font-bold text-white">{itemsRecycled}</p>
           </SpotlightCard>
 
           {/* Active Bins Card */}

@@ -6,7 +6,14 @@ app = FastAPI(title="ReMat Backend")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://172.20.37.138:5173",  # Your local IP
+        "capacitor://localhost",      # Important for Capacitor!
+        "ionic://localhost",          # Also for Capacitor
+        "http://localhost",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

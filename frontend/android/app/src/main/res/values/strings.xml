@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Remat-App</string>
+    <string name="title_activity_main">Remat-App</string>
+    <string name="package_name">com.remat.app</string>
+    <string name="custom_url_scheme">com.remat.app</string>
+</resources>

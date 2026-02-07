@@ -4,8 +4,8 @@ import { onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndP
 import { auth, googleProvider } from "../services/firebase";
 import { AuthContext } from "./AuthContext";
 import { type UserProfile } from "./types";
+import { API_BASE } from "../config/api";
 
-const API_BASE = "http://127.0.0.1:8000";
 
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
