@@ -6,6 +6,8 @@ import { type Bin } from "../../types";
 import SpotlightCard from "../components/UIComponents/SpotlightCard";
 import toast, {Toaster} from "react-hot-toast";
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000";
+
 const AdminDashboard = () => {
   const { profile, logout } = useAuth();
   const navigate = useNavigate();
@@ -24,7 +26,7 @@ const AdminDashboard = () => {
      Fetch bins
   ------------------------------ */
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/bins")
+    fetch(`${API_BASE}/api/bins`)
       .then(res => res.json())
       .then(data => {
         setBins(data.bins || []);

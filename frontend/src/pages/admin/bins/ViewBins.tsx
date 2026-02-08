@@ -15,6 +15,8 @@ interface Bin {
   created_at: string;
 }
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000";
+
 const ViewBins = () => {
   const [bins, setBins] = useState<Bin[]>([]);
   const [selectedBin, setSelectedBin] = useState<Bin | null>(null);
@@ -26,7 +28,7 @@ const ViewBins = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/bins")
+    fetch(`${API_BASE}/api/bins`)
       .then(res => res.json())
       .then(data => {
         setBins(data.bins || []);

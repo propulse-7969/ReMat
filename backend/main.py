@@ -24,6 +24,6 @@ app.include_router(user_request.router)
 
 
 
-@app.get("/")
+@app.get("/health")
 def root():
     return {"status": "Backend running"}

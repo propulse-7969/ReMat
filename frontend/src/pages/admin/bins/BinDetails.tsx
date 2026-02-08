@@ -15,6 +15,8 @@ interface Bin {
   created_at: string;
 }
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000";
+
 const BinDetails = () => {
   const { binId } = useParams();
   const navigate = useNavigate();
@@ -26,7 +28,7 @@ const BinDetails = () => {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   useEffect(() => {
-    fetch(`http://127.0.0.1:8000/api/bins/${binId}`)
+    fetch(`${API_BASE}/api/bins/${binId}`)
       .then(res => res.json())
       .then(data => {
         setBin(data);
@@ -72,7 +74,7 @@ const BinDetails = () => {
   const handleUpdate = async () => {
     setSaving(true);
     try {
-      await fetch(`http://127.0.0.1:8000/api/bins/${bin.id}`, {
+      await fetch(`${API_BASE}/api/bins/${bin.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json"
@@ -95,7 +97,7 @@ const BinDetails = () => {
   const handleDelete = async () => {
     setDeleting(true);
     try {
-      await fetch(`http://127.0.0.1:8000/api/bins/${bin.id}`, {
+      await fetch(`${API_BASE}/api/bins/${bin.id}`, {
         method: "DELETE"
       });
       toast.success("Bin deleted");

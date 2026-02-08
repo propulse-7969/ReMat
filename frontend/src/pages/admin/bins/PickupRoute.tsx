@@ -15,6 +15,8 @@ interface AddressSuggestion {
   lon: string;
 }
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000";
+
 const PickupRoute = () => {
   const [bins, setBins] = useState<Bin[]>([]);
   const [selectedBins, setSelectedBins] = useState<Bin[]>([]);
@@ -35,7 +37,7 @@ const PickupRoute = () => {
   const [statusFilter, setStatusFilter] = useState<string>("all");
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/bins")
+    fetch(`${API_BASE}/api/bins`)
       .then(res => res.json())
       .then(data => setBins(data.bins || []));
   }, []);
@@ -86,7 +88,7 @@ const PickupRoute = () => {
 
     setOptimizing(true);
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/route/optimize", {
+      const res = await fetch(`${API_BASE}/api/route/optimize`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

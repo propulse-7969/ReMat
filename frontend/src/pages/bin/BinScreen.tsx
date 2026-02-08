@@ -5,13 +5,15 @@ import "./BinScreen.css";
 import type { Bin } from "../../types";
 import logo from "../../../public/tab-logo.png"
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000";
+
 const BinScreen = () => {
   const { binId } = useParams();
   const [bin, setBin] = useState<Bin>();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`http://127.0.0.1:8000/api/bins/${binId}`)
+    fetch(`${API_BASE}/api/bins/${binId}`)
       .then(res => res.json())
       .then(data => {
         setBin(data);
