@@ -16,6 +16,8 @@
 
 ---
 
+### *Deployment*: https://re-mat.vercel.app
+
 ## 🌍 The Problem We're Solving
 
 Electronic waste is one of the fastest-growing waste streams globally. India alone generates **3.2 million tonnes** of e-waste annually, with alarming consequences:
@@ -337,9 +339,16 @@ CREATE DATABASE remat;
 CREATE EXTENSION postgis;
 ```
 
+### Admin Credentials
+
+```
+email: admin@remat.com
+passoword: rematadmin
+```
+
 ### ML Model
 
-Download the trained model from [Kaggle](https://www.kaggle.com/code/saiswaroop8656/remat) and place at `backend/Models/ewaste_final.keras`
+Here is the training of the ML model used: [Kaggle](https://www.kaggle.com/code/saiswaroop8656/remat)
 
 ---
 
