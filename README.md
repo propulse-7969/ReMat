@@ -314,7 +314,8 @@ pip install -r requirements.txt
 mkdir -p uploads/waste_images
 
 # Configure environment
-# 1. Add Firebase Admin SDK key to backend/serviceAccountKey.json
+# 1. Firebase Admin: either add backend/serviceAccountKey.json (keep in .gitignore)
+#    OR set FIREBASE_SERVICE_ACCOUNT_JSON in backend/.env to the full JSON string (for production/CI)
 # 2. Create backend/.env with database and API credentials
 
 # Start backend
