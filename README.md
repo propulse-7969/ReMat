@@ -1,7 +1,7 @@
 # ReMat
 
 <p align="center">
-  <img src="frontend/src/login-logo.png" alt="ReMat Project Logo" width="50%" height="50%" />
+  <img src="frontend/src/login-logo.png" alt="ReMat Project Logo" width="25%" height="25%" />
 </p>
 
 **ReMat** is an e-waste recycling platform that connects citizens, recycling bins, and administrators. Users earn points for depositing e-waste at bins (with optional AI-based waste classification), request pickups for larger items, and admins manage bins and pickup routes. The project promotes responsible disposal of electronic waste and environmental sustainability.
