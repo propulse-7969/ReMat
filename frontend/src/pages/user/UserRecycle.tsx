@@ -92,8 +92,9 @@ const UserRecycle = () => {
   const [confirmationModalOpen, setConfirmationModalOpen] = useState<boolean>(false);
   const [qrScannerModalOpen, setQrScannerModalOpen] = useState<boolean>(false);
   const [detectionModalOpen, setDetectionModalOpen] = useState<boolean>(false);
+  const [resultIsManual, setResultIsManual] = useState<boolean>(false);
 
-  const API_BASE = (import.meta.env.VITE_API_URL as string) ?? "http://127.0.0.1:8000";
+  const API_BASE = (import.meta.env.VITE_API_BASE_URL as string) ?? (import.meta.env.VITE_API_URL as string) ?? "http://127.0.0.1:8000";
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -154,6 +155,7 @@ const UserRecycle = () => {
 
       const data: DetectionResult = await apiResponse.json();
       setResult(data);
+      setResultIsManual(false);
       setDisplay(true);
       setManualMode(false);
       setDetectionModalOpen(true); // Open detection result modal
@@ -203,6 +205,7 @@ const UserRecycle = () => {
       points_to_earn: manualPoints,
       base_points: manualPoints,
     });
+    setResultIsManual(true);
     setManualMode(false);
     setDetectionModalOpen(true); // Open detection modal with manual result
   };
@@ -215,21 +218,26 @@ const UserRecycle = () => {
 
     setTxnLoading(true);
     try {
-      const response = await fetch(`${API_BASE}/user/submit-waste`, {
-        method: "POST",
+      // Backend: PUT /user/recycle/{binid} with RecyclePayload
+      const response = await fetch(`${API_BASE}/user/recycle/${scannedBinId}`, {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          bin_id: scannedBinId,
           waste_type: result.waste_type,
-          points: result.points_to_earn ?? result.estimated_value ?? 0,
-          confidence: result.confidence,
+          confidence: result.confidence ?? 0,
+          base_points: result.base_points ?? undefined,
+          estimated_value: result.points_to_earn ?? result.estimated_value ?? undefined,
+          user_override: resultIsManual,
         }),
       });
 
-      if (!response.ok) throw new Error("Transaction failed");
+      if (!response.ok) {
+        const errData = await response.json().catch(() => ({}));
+        throw new Error(errData.detail ?? "Transaction failed");
+      }
 
       const txnData = await response.json();
       toast.success(`Successfully earned ${txnData.points_earned} points!`);
