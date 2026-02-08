@@ -141,7 +141,34 @@ const PillNav: React.FC<PillNavProps> = ({
     return () => window.removeEventListener('resize', onResize);
   }, [items, ease, initialLoadAnimation]);
 
-  // Close mobile menu when clicking outside
+    const closeMobileMenu = () => {
+      setIsMobileMenuOpen(false);
+
+      const hamburger = hamburgerRef.current;
+      const menu = mobileMenuRef.current;
+
+      if (hamburger) {
+        const lines = hamburger.querySelectorAll('.hamburger-line');
+        gsap.to(lines[0], { rotation: 0, y: 0, duration: 0.3, ease });
+        gsap.to(lines[1], { rotation: 0, y: 0, duration: 0.3, ease });
+      }
+
+      if (menu) {
+        gsap.to(menu, {
+          opacity: 0,
+          y: 10,
+          scaleY: 1,
+          duration: 0.2,
+          ease,
+          transformOrigin: 'top center',
+          onComplete: () => {
+            gsap.set(menu, { visibility: 'hidden' });
+          }
+        });
+      }
+    };
+
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (!isMobileMenuOpen) return;
@@ -167,32 +194,7 @@ const PillNav: React.FC<PillNavProps> = ({
     };
   }, [isMobileMenuOpen]);
 
-  const closeMobileMenu = () => {
-    setIsMobileMenuOpen(false);
 
-    const hamburger = hamburgerRef.current;
-    const menu = mobileMenuRef.current;
-
-    if (hamburger) {
-      const lines = hamburger.querySelectorAll('.hamburger-line');
-      gsap.to(lines[0], { rotation: 0, y: 0, duration: 0.3, ease });
-      gsap.to(lines[1], { rotation: 0, y: 0, duration: 0.3, ease });
-    }
-
-    if (menu) {
-      gsap.to(menu, {
-        opacity: 0,
-        y: 10,
-        scaleY: 1,
-        duration: 0.2,
-        ease,
-        transformOrigin: 'top center',
-        onComplete: () => {
-          gsap.set(menu, { visibility: 'hidden' });
-        }
-      });
-    }
-  };
 
   const handleEnter = (i: number) => {
     const tl = tlRefs.current[i];
@@ -415,7 +417,7 @@ const PillNav: React.FC<PillNavProps> = ({
                 <a
                   href={item.href}
                   className={`mobile-menu-link${activeHref === item.href ? ' is-active' : ''}`}
-                  onClick={closeMobileMenu}
+                  // onClick={closeMobileMenu}
                   onClick={handleMobileMenuLinkClick}
                 >
                   {item.label}
