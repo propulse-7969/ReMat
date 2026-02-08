@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import QRCode from "react-qr-code";
 import "./BinScreen.css";
 import type { Bin } from "../../types";
+import logo from "../../../public/tab-logo.png"
 
 const BinScreen = () => {
   const { binId } = useParams();
@@ -52,18 +53,41 @@ const BinScreen = () => {
     <div className="bin-fullscreen">
       <div className="bin-screen-content">
         {/* Left Side - Bin Information */}
-        <div className="info-section">
-          <div className="info-block">
+        <div className="info-section" style={{ position: 'relative' }}>
+          {/* Background Logo Watermark */}
+          <div 
+            style={{
+              position: 'absolute',
+              top: '80%',
+              left: '70%',
+              transform: 'translate(-50%, -50%)',
+              opacity: 0.4,
+              pointerEvents: 'none',
+              zIndex: 0
+            }}
+          >
+            <img 
+              src={logo} 
+              alt="Logo" 
+              style={{
+                width: '200px',
+                height: 'auto',
+                objectFit: 'contain'
+              }}
+            />
+          </div>
+
+          <div className="info-block" style={{ position: 'relative', zIndex: 1 }}>
             <p className="info-label">Bin Name</p>
             <h1 className="info-title">{bin.name}</h1>
           </div>
 
-          <div className="info-block">
+          <div className="info-block" style={{ position: 'relative', zIndex: 1 }}>
             <p className="info-label">Bin ID</p>
             <p className="info-id">#{bin.id}</p>
           </div>
 
-          <div className="info-block">
+          <div className="info-block" style={{ position: 'relative', zIndex: 1 }}>
             <p className="info-label">Fill %</p>
             <p className="info-fill">{fillPercent}%</p>
           </div>
