@@ -11,6 +11,7 @@ import os
 from datetime import datetime
 import shutil
 from app.services.waste_detector import predict_waste
+from app.models import pickup_request as PR
 
 router = APIRouter(prefix="/user", tags=["User"])
 

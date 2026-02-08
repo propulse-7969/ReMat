@@ -95,8 +95,8 @@ const Transactions = () => {
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
         <div className="max-w-lg w-full bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl px-8 py-10 text-center">
-          <div className="w-16 h-16 border-4 border-white/20 border-t-white rounded-full animate-spin mx-auto mb-6"></div>
-          <div className="text-white text-lg font-medium">Loading transactions… ♻️</div>
+          <div className="w-12 h-12 sm:w-16 sm:h-16 border-4 border-white/20 border-t-white rounded-full animate-spin mx-auto mb-4 sm:mb-6"></div>
+          <div className="text-white text-base sm:text-lg font-medium">Loading transactions… ♻️</div>
         </div>
       </div>
     );
@@ -104,16 +104,16 @@ const Transactions = () => {
 
   if (transactions.length === 0 && page === 1) {
     return (
-      <div className="min-h-screen pb-0">
+      <div className="min-h-screen pb-6">
         <div className="max-w-350 mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
           {/* Header */}
-          <div className="mb-8">
+          <div className="mb-6 sm:mb-8">
             <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl shadow-black/20 overflow-hidden">
-              <div className="px-6 sm:px-8 py-6 sm:py-8">
-                <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">
+              <div className="px-5 sm:px-6 lg:px-8 py-5 sm:py-6 lg:py-8">
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2">
                   Your Transactions 📊
                 </h1>
-                <p className="text-base text-white/60">Track your recycling history and points earned</p>
+                <p className="text-sm sm:text-base text-white/60">Track your recycling history and points earned</p>
               </div>
             </div>
           </div>
@@ -137,18 +137,18 @@ const Transactions = () => {
   }
 
   return (
-    <div className="min-h-screen pb-0">
+    <div className="min-h-screen pb-6">
       <div className="max-w-350 mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
         {/* Header Section */}
-        <div className="mb-8">
+        <div className="mb-6 sm:mb-8">
           <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl shadow-black/20 overflow-hidden">
-            <div className="px-6 sm:px-8 py-6 sm:py-8">
+            <div className="px-5 sm:px-6 lg:px-8 py-5 sm:py-6 lg:py-8">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                  <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">
+                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2">
                     Your Transactions 📊
                   </h1>
-                  <p className="text-base text-white/60">Track your recycling history and points earned</p>
+                  <p className="text-sm sm:text-base text-white/60">Track your recycling history and points earned</p>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="px-6 py-4 bg-linear-to-br from-green-500/20 to-green-600/10 border border-green-500/30 rounded-xl backdrop-blur-sm">
@@ -162,11 +162,11 @@ const Transactions = () => {
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
           {/* This Week */}
-          <SpotlightCard className="bg-linear-to-br from-blue-500/10 to-blue-600/5 backdrop-blur-xl border border-blue-500/20 rounded-xl p-6 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300 group">
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-blue-500/20 rounded-lg group-hover:scale-110 transition-transform duration-300">
+          <SpotlightCard className="bg-linear-to-br from-blue-500/10 to-blue-600/5 backdrop-blur-xl border border-blue-500/20 rounded-xl p-4 sm:p-6 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300 group">
+            <div className="flex items-center justify-between mb-3 sm:mb-4">
+              <div className="p-2 sm:p-3 bg-blue-500/20 rounded-lg group-hover:scale-110 transition-transform duration-300">
                 <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
@@ -178,9 +178,9 @@ const Transactions = () => {
           </SpotlightCard>
 
           {/* This Month */}
-          <SpotlightCard className="bg-linear-to-br from-green-500/10 to-green-600/5 backdrop-blur-xl border border-green-500/20 rounded-xl p-6 hover:shadow-xl hover:shadow-green-500/10 transition-all duration-300 group">
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-green-500/20 rounded-lg group-hover:scale-110 transition-transform duration-300">
+          <SpotlightCard className="bg-linear-to-br from-green-500/10 to-green-600/5 backdrop-blur-xl border border-green-500/20 rounded-xl p-4 sm:p-6 hover:shadow-xl hover:shadow-green-500/10 transition-all duration-300 group">
+            <div className="flex items-center justify-between mb-3 sm:mb-4">
+              <div className="p-2 sm:p-3 bg-green-500/20 rounded-lg group-hover:scale-110 transition-transform duration-300">
                 <svg className="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                 </svg>
@@ -191,9 +191,9 @@ const Transactions = () => {
           </SpotlightCard>
 
           {/* All Time */}
-          <SpotlightCard className="bg-linear-to-br from-purple-500/10 to-purple-600/5 backdrop-blur-xl border border-purple-500/20 rounded-xl p-6 hover:shadow-xl hover:shadow-purple-500/10 transition-all duration-300 group">
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-purple-500/20 rounded-lg group-hover:scale-110 transition-transform duration-300">
+          <SpotlightCard className="bg-linear-to-br from-purple-500/10 to-purple-600/5 backdrop-blur-xl border border-purple-500/20 rounded-xl p-4 sm:p-6 hover:shadow-xl hover:shadow-purple-500/10 transition-all duration-300 group">
+            <div className="flex items-center justify-between mb-3 sm:mb-4">
+              <div className="p-2 sm:p-3 bg-purple-500/20 rounded-lg group-hover:scale-110 transition-transform duration-300">
                 <svg className="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
@@ -205,25 +205,25 @@ const Transactions = () => {
         </div>
 
         {/* Transactions List */}
-        <SpotlightCard className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-6 mb-6">
+        <SpotlightCard className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-5 sm:p-6 mb-4 sm:mb-6">
           <div className="flex items-center gap-2 mb-6">
             <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <h3 className="text-lg font-semibold text-white">Recent Transactions</h3>
+            <h3 className="text-base sm:text-lg font-semibold text-white">Recent Transactions</h3>
           </div>
           
-          <div className="space-y-3">
+          <div className="space-y-2 sm:space-y-3">
             {transactions.map((txn, index) => (
               <SpotlightCard
                 key={txn.id}
-                className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-lg p-5 hover:bg-white/10 transition-all duration-300 group"
+                className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-lg p-4 sm:p-5 hover:bg-white/10 transition-all duration-300 group"
               >
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                   {/* Left Section */}
                   <div className="flex items-start gap-4">
                     {/* Number Badge */}
-                    <div className="shrink-0 w-10 h-10 bg-linear-to-br from-blue-500/20 to-blue-600/10 border border-blue-500/30 rounded-lg flex items-center justify-center">
+                    <div className="shrink-0 w-8 h-8 sm:w-10 sm:h-10 bg-linear-to-br from-blue-500/20 to-blue-600/10 border border-blue-500/30 rounded-lg flex items-center justify-center">
                       <span className="text-blue-400 font-bold text-sm">#{(page - 1) * PAGE_SIZE + index + 1}</span>
                     </div>
                     
@@ -273,7 +273,7 @@ const Transactions = () => {
             <button
               onClick={() => setPage((p) => Math.max(p - 1, 1))}
               disabled={page === 1}
-              className="w-full sm:w-auto px-6 py-3 bg-white/10 hover:bg-white/20 disabled:bg-white/5 border border-white/20 disabled:border-white/10 rounded-lg font-semibold text-white disabled:text-white/30 transition-all duration-200 disabled:cursor-not-allowed flex items-center justify-center gap-2 group"
+              className="w-full sm:w-auto px-4 sm:px-5 lg:px-6 py-2.5 sm:py-3 bg-white/10 hover:bg-white/20 disabled:bg-white/5 border border-white/20 disabled:border-white/10 rounded-lg font-semibold text-white disabled:text-white/30 transition-all duration-200 disabled:cursor-not-allowed flex items-center justify-center gap-2 group"
             >
               <svg className="w-5 h-5 group-disabled:opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -281,7 +281,7 @@ const Transactions = () => {
               Previous
             </button>
 
-            <div className="px-6 py-3 bg-linear-to-br from-purple-500/20 to-purple-600/10 border border-purple-500/30 rounded-lg">
+            <div className="px-4 sm:px-5 lg:px-6 py-2.5 sm:py-3 bg-linear-to-br from-purple-500/20 to-purple-600/10 border border-purple-500/30 rounded-lg">
               <span className="text-white/60 text-sm font-medium">Page </span>
               <span className="text-white font-bold text-lg">{page}</span>
             </div>
@@ -289,7 +289,7 @@ const Transactions = () => {
             <button
               onClick={() => setPage((p) => p + 1)}
               disabled={transactions.length < PAGE_SIZE}
-              className="w-full sm:w-auto px-6 py-3 bg-white/10 hover:bg-white/20 disabled:bg-white/5 border border-white/20 disabled:border-white/10 rounded-lg font-semibold text-white disabled:text-white/30 transition-all duration-200 disabled:cursor-not-allowed flex items-center justify-center gap-2 group"
+              className="w-full sm:w-auto px-4 sm:px-5 lg:px-6 py-2.5 sm:py-3 bg-white/10 hover:bg-white/20 disabled:bg-white/5 border border-white/20 disabled:border-white/10 rounded-lg font-semibold text-white disabled:text-white/30 transition-all duration-200 disabled:cursor-not-allowed flex items-center justify-center gap-2 group"
             >
               Next
               <svg className="w-5 h-5 group-disabled:opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -188,12 +188,12 @@ const UserRewards = () => {
     <div className="min-h-screen pb-0">
       <div className="max-w-350 mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
         {/* Header Section */}
-        <div className="mb-8">
+        <div className="mb-6 sm:mb-8">
           <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl shadow-black/20 overflow-hidden">
             <div className="px-6 sm:px-8 py-6 sm:py-8">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                  <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">
+                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2">
                     Rewards Store 🎁
                   </h1>
                   <p className="text-base text-white/60">Redeem your points for exclusive eco-friendly prizes and goodies</p>
@@ -210,7 +210,7 @@ const UserRewards = () => {
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
           <SpotlightCard className="bg-linear-to-br from-green-500/10 to-green-600/5 backdrop-blur-xl border border-green-500/20 rounded-xl p-6 hover:shadow-xl hover:shadow-green-500/10 transition-all duration-300 group">
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 bg-green-500/20 rounded-lg group-hover:scale-110 transition-transform duration-300">
@@ -262,7 +262,7 @@ const UserRewards = () => {
         </div>
 
         {/* Category Filter */}
-        <SpotlightCard className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-6 mb-8">
+        <SpotlightCard className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-6 mb-6 sm:mb-8">
           <div className="flex items-center gap-2 mb-4">
             <svg className="w-5 h-5 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
@@ -290,7 +290,7 @@ const UserRewards = () => {
 
         {/* Featured Prizes */}
         {selectedCategory === "all" && featuredPrizes.length > 0 && (
-          <div className="mb-8">
+          <div className="mb-6 sm:mb-8">
             <div className="flex items-center gap-2 mb-4">
               <svg className="w-6 h-6 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
@@ -298,7 +298,7 @@ const UserRewards = () => {
               <h2 className="text-2xl font-bold text-white">Featured Prizes</h2>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6 sm:mb-8">
               {featuredPrizes.map((prize) => (
                 <SpotlightCard
                   key={prize.id}
@@ -371,7 +371,7 @@ const UserRewards = () => {
             <span className="text-white/60 text-sm">{filteredPrizes.length} items</span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
             {filteredPrizes.map((prize) => (
               <SpotlightCard
                 key={prize.id}
@@ -439,7 +439,7 @@ const UserRewards = () => {
         {/* Redemption Modal */}
         {showRedeemModal && selectedPrize && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-            <SpotlightCard className="bg-white/10 backdrop-blur-2xl border border-white/20 rounded-2xl p-8 max-w-md w-full shadow-2xl">
+            <SpotlightCard className="bg-white/10 backdrop-blur-2xl border border-white/20 rounded-2xl p-6 sm:p-8 max-w-md w-full mx-4 shadow-2xl">
               <div className="text-center mb-6">
                 <div className="text-6xl mb-4">🎁</div>
                 <h3 className="text-2xl font-bold text-white mb-2">Confirm Redemption</h3>
@@ -466,13 +466,13 @@ const UserRewards = () => {
                     setShowRedeemModal(false);
                     setSelectedPrize(null);
                   }}
-                  className="flex-1 py-3 px-4 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg font-semibold text-white transition-all duration-200"
+                  className="flex-1 py-2.5 sm:py-3 px-3 sm:px-4 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg font-semibold text-white transition-all duration-200"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={confirmRedeem}
-                  className="flex-1 py-3 px-4 bg-linear-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 rounded-lg font-semibold text-white shadow-lg hover:shadow-xl transition-all duration-200"
+                  className="flex-1 py-2.5 sm:py-3 px-3 sm:px-4 bg-linear-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 rounded-lg font-semibold text-white shadow-lg hover:shadow-xl transition-all duration-200"
                 >
                   Confirm
                 </button>

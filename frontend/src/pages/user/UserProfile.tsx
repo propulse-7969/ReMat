@@ -173,33 +173,33 @@ const UserProfile = () => {
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
         <div className="max-w-lg w-full bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl px-8 py-10 text-center">
-          <div className="w-16 h-16 border-4 border-white/20 border-t-white rounded-full animate-spin mx-auto mb-6"></div>
-          <div className="text-white text-lg font-medium">Loading your profile…</div>
+          <div className="w-12 h-12 sm:w-16 sm:h-16 border-4 border-white/20 border-t-white rounded-full animate-spin mx-auto mb-4 sm:mb-6"></div>
+          <div className="text-white text-base sm:text-lg font-medium">Loading your profile…</div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen pb-6">
       <Toaster />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">My Profile</h1>
-          <p className="text-white/60">Manage your account settings and view your stats</p>
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl lg:text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2">My Profile</h1>
+          <p className="text-sm sm:text-base text-white/60">Manage your account settings and view your stats</p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
           {/* Left Column - Profile Info */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 space-y-4 sm:space-y-6">
             {/* Profile Card */}
-            <SpotlightCard className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-8">
+            <SpotlightCard className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-5 sm:p-6 lg:p-8">
               <div className="flex items-start gap-6 mb-8">
                 {/* Avatar */}
                 <div className="shrink-0">
-                  <div className="w-24 h-24 bg-linear-to-br from-green-400 to-green-600 rounded-2xl flex items-center justify-center shadow-lg shadow-green-500/20">
-                    <span className="text-4xl font-bold text-white">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 bg-linear-to-br from-green-400 to-green-600 rounded-2xl flex items-center justify-center shadow-lg shadow-green-500/20">
+                    <span className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
                       {profile.name?.charAt(0).toUpperCase() || "U"}
                     </span>
                   </div>
@@ -207,7 +207,7 @@ const UserProfile = () => {
 
                 {/* Info */}
                 <div className="flex-1 min-w-0">
-                  <h2 className="text-2xl font-bold text-white mb-1">{profile.name}</h2>
+                  <h2 className="text-xl sm:text-2xl font-bold text-white mb-1">{profile.name}</h2>
                   <p className="text-white/60 text-sm mb-4">{profile.email}</p>
                   
                   <div className="flex flex-wrap gap-3">
@@ -230,7 +230,7 @@ const UserProfile = () => {
 
               {/* Account Details */}
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-white mb-4">Account Details</h3>
+                <h3 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4">Account Details</h3>
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="p-4 bg-white/5 rounded-lg">
@@ -259,14 +259,14 @@ const UserProfile = () => {
             </SpotlightCard>
 
             {/* Actions Card */}
-            <SpotlightCard className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-8">
-              <h3 className="text-lg font-semibold text-white mb-6">Account Actions</h3>
+            <SpotlightCard className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-5 sm:p-6 lg:p-8">
+              <h3 className="text-base sm:text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4 sm:mb-6">Account Actions</h3>
               
               <div className="space-y-4">
                 {/* Logout Button */}
                 <button
                   onClick={handleLogout}
-                  className="w-full px-6 py-4 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white font-semibold rounded-lg transition-all duration-200 flex items-center justify-center gap-3 group"
+                  className="w-full min-h-\[44px\] px-5 sm:px-6 py-3 sm:py-4 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white font-semibold rounded-lg transition-all duration-200 flex items-center justify-center gap-3 group"
                 >
                   <svg className="w-5 h-5 text-white/60 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -278,7 +278,7 @@ const UserProfile = () => {
                 <button
                   onClick={handleDeleteAccount}
                   disabled={deleting}
-                  className="w-full px-6 py-4 bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 hover:border-red-500/50 text-red-400 hover:text-red-300 font-semibold rounded-lg transition-all duration-200 flex items-center justify-center gap-3 group disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full min-h-\[44px\] px-5 sm:px-6 py-3 sm:py-4 bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 hover:border-red-500/50 text-red-400 hover:text-red-300 font-semibold rounded-lg transition-all duration-200 flex items-center justify-center gap-3 group disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -305,7 +305,7 @@ const UserProfile = () => {
           </div>
 
           {/* Right Column - Stats & Achievements */}
-          <div className="lg:col-span-1 space-y-6">
+          <div className="lg:col-span-1 space-y-4 sm:space-y-6">
             {/* Stats Summary */}
             <SpotlightCard className="bg-linear-to-br from-green-500/10 to-green-600/5 backdrop-blur-xl border border-green-500/20 rounded-xl p-6">
               <div className="flex items-center gap-3 mb-6">

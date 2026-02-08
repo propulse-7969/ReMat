@@ -97,9 +97,17 @@ export default function MapView({
         
         .leaflet-popup-content {
           margin: 0;
-          padding: 16px;
+          padding: 12px;
           color: white;
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+          min-width: 200px;
+        }
+
+        @media (min-width: 640px) {
+          .leaflet-popup-content {
+            padding: 16px;
+            min-width: 240px;
+          }
         }
         
         .leaflet-popup-tip {
@@ -109,36 +117,60 @@ export default function MapView({
         }
         
         .popup-title {
-          font-size: 16px;
+          font-size: 14px;
           font-weight: 700;
           color: #fff;
-          margin-bottom: 12px;
-          padding-bottom: 12px;
+          margin-bottom: 10px;
+          padding-bottom: 10px;
           border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @media (min-width: 640px) {
+          .popup-title {
+            font-size: 16px;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+          }
         }
         
         .popup-info {
           display: flex;
           flex-direction: column;
-          gap: 8px;
-          margin-bottom: 12px;
+          gap: 6px;
+          margin-bottom: 10px;
+        }
+
+        @media (min-width: 640px) {
+          .popup-info {
+            gap: 8px;
+            margin-bottom: 12px;
+          }
         }
         
         .popup-info-item {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          font-size: 13px;
+          font-size: 12px;
+          gap: 8px;
+        }
+
+        @media (min-width: 640px) {
+          .popup-info-item {
+            font-size: 13px;
+          }
         }
         
         .popup-label {
           color: rgba(255, 255, 255, 0.6);
           font-weight: 500;
+          flex-shrink: 0;
         }
         
         .popup-value {
           color: #fff;
           font-weight: 600;
+          text-align: right;
         }
         
         .popup-status-active {
@@ -155,19 +187,28 @@ export default function MapView({
         
         .popup-button {
           width: 100%;
-          padding: 10px 16px;
+          padding: 10px 14px;
           background: linear-gradient(to right, #3b82f6, #2563eb);
           color: white;
           border: none;
           border-radius: 8px;
           font-weight: 600;
-          font-size: 14px;
+          font-size: 13px;
           cursor: pointer;
           transition: all 0.2s;
           display: flex;
           align-items: center;
-          justify-content: center;
+          justify-center;
           gap: 6px;
+          min-height: 44px;
+          touch-action: manipulation;
+        }
+
+        @media (min-width: 640px) {
+          .popup-button {
+            padding: 10px 16px;
+            font-size: 14px;
+          }
         }
         
         .popup-button:hover {
@@ -175,14 +216,61 @@ export default function MapView({
           transform: translateY(-1px);
           box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
         }
+
+        .popup-button:active {
+          transform: translateY(0);
+        }
         
         .popup-button svg {
           width: 16px;
           height: 16px;
+          flex-shrink: 0;
         }
 
         .leaflet-container {
           background: #0f172a;
+          touch-action: pan-x pan-y;
+        }
+
+        /* Better touch targets for mobile */
+        .leaflet-control-zoom a {
+          width: 36px;
+          height: 36px;
+          line-height: 36px;
+          font-size: 20px;
+        }
+
+        @media (min-width: 640px) {
+          .leaflet-control-zoom a {
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            font-size: 18px;
+          }
+        }
+
+        /* Improve marker tap targets on mobile */
+        .leaflet-marker-icon {
+          cursor: pointer;
+        }
+
+        /* Close button in popup */
+        .leaflet-popup-close-button {
+          width: 32px;
+          height: 32px;
+          font-size: 20px;
+          padding: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        @media (min-width: 640px) {
+          .leaflet-popup-close-button {
+            width: 24px;
+            height: 24px;
+            font-size: 16px;
+          }
         }
       `}</style>
       
@@ -190,6 +278,7 @@ export default function MapView({
         center={center}
         zoom={zoom}
         style={{ height, width: "100%" }}
+        className="rounded-lg sm:rounded-xl"
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

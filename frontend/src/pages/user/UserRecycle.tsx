@@ -9,6 +9,7 @@ import { extractBinIdFromQR } from "../utils/getBinfromQR";
 import SpotlightCard from "../components/UIComponents/SpotlightCard";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import DetectionResultModal from "../components/DetectionResultModal";
 
 
 interface BinResponse {
@@ -90,6 +91,7 @@ const UserRecycle = () => {
   const [selectedItem, setSelectedItem] = useState<string>("");
   const [confirmationModalOpen, setConfirmationModalOpen] = useState<boolean>(false);
   const [qrScannerModalOpen, setQrScannerModalOpen] = useState<boolean>(false);
+  const [detectionModalOpen, setDetectionModalOpen] = useState<boolean>(false);
 
   const API_BASE = (import.meta.env.VITE_API_URL as string) ?? "http://127.0.0.1:8000";
 
@@ -154,6 +156,7 @@ const UserRecycle = () => {
       setResult(data);
       setDisplay(true);
       setManualMode(false);
+      setDetectionModalOpen(true); // Open detection result modal
 
       // fetch bins from backend
       const binsResp = await fetch(`${API_BASE}/api/bins/`);
@@ -180,98 +183,75 @@ const UserRecycle = () => {
     }
   };
 
+  const handleChangeSelection = () => {
+    setManualMode(true);
+    setDisplay(true);
+    setDetectionModalOpen(false); // Close detection modal
+  };
+
   const handleManualSelection = () => {
     setManualMode(true);
     setDisplay(true);
-    setResult(null);
-    
-    // Fetch bins for manual mode too
-    fetch(`${API_BASE}/api/bins/`)
-      .then(res => res.json())
-      .then(binsData => {
-        const remoteBins: Bin[] = (binsData.bins ?? []).map((b: BinResponse) => ({
-          id: b.id,
-          name: b.name,
-          lat: Number(b.lat),
-          lng: Number(b.lng),
-          status: b.status,
-          fill_level: b.fill_level,
-          capacity: b.capacity,
-        }));
-        setBins(remoteBins);
-        if (remoteBins.length > 0) setMapCenter([remoteBins[0].lat, remoteBins[0].lng]);
-      })
-      .catch(console.error);
   };
 
   const handleManualItemConfirm = () => {
-    if (!selectedItem) {
-      toast.error("Please select an item");
-      return;
-    }
-    
-    // Create a mock result using manual points
-    const mockResult: DetectionResult = {
+    if (!selectedItem) return;
+    const manualPoints = MANUAL_OVERRIDE_POINTS[selectedItem];
+    setResult({
       waste_type: selectedItem,
       confidence: 1.0,
-      base_points: MANUAL_OVERRIDE_POINTS[selectedItem] || 0,
-      points_to_earn: MANUAL_OVERRIDE_POINTS[selectedItem] || 0,
-      estimated_value: MANUAL_OVERRIDE_POINTS[selectedItem] || 0,
-    };
-    
-    setResult(mockResult);
+      points_to_earn: manualPoints,
+      base_points: manualPoints,
+    });
     setManualMode(false);
+    setDetectionModalOpen(true); // Open detection modal with manual result
   };
 
   const handleAccept = async () => {
-    if (!result || !scannedBinId || !token) return;
+    if (!result || !scannedBinId || !token) {
+      toast.error("Missing required data for transaction");
+      return;
+    }
+
     setTxnLoading(true);
     try {
-      const res = await fetch(`${API_BASE}/user/recycle/${scannedBinId}`, {
-        method: "PUT",
+      const response = await fetch(`${API_BASE}/user/submit-waste`, {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
+          bin_id: scannedBinId,
           waste_type: result.waste_type,
-          base_points: result.base_points ?? result.estimated_value ?? 0,
-          confidence: result.confidence ?? null,
-          user_override: result.confidence === 1.0 && MANUAL_OVERRIDE_POINTS[result.waste_type] !== undefined,
+          points: result.points_to_earn ?? result.estimated_value ?? 0,
+          confidence: result.confidence,
         }),
       });
-      const data = await res.json().catch(() => null);
-      if (!res.ok) {
-        const message =
-          (data && typeof data === "object" && "detail" in data && typeof (data as any).detail === "string" && (data as any).detail) ||
-          (data && typeof data === "object" && "error" in data && typeof (data as any).error === "string" && (data as any).error) ||
-          "Transaction failed";
-        throw new Error(message);
-      }
-      toast.success(`Success! You earned ${data.points_earned} points. 🎉`);
-      setDisplay(false);
+
+      if (!response.ok) throw new Error("Transaction failed");
+
+      const txnData = await response.json();
+      toast.success(`Successfully earned ${txnData.points_earned} points!`);
+      
+      // Reset state
       setResult(null);
+      setDisplay(false);
       setScannedBinId(null);
-      setSelectedItem("");
       setConfirmationModalOpen(false);
-      navigate("/user/thankyou");
-    } catch (err) {
-      console.error(err);
-      toast.error(err instanceof Error ? err.message : "Transaction failed. Please try again.");
+      navigate('/user/dashboard')
+    } catch (error) {
+      console.error("Transaction error:", error);
+      toast.error("Failed to complete transaction. Please try again.");
     } finally {
       setTxnLoading(false);
     }
   };
 
   const handleReject = () => {
-    setScannedBinId(null);
     setConfirmationModalOpen(false);
-  };
-
-  const handleChangeSelection = () => {
-    setManualMode(true);
     setScannedBinId(null);
-    setConfirmationModalOpen(false);
+    setDetectionModalOpen(true); // Reopen detection modal
   };
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -387,6 +367,18 @@ const UserRecycle = () => {
           </div>
         )}
 
+        {/* Detection Result Modal */}
+        <DetectionResultModal 
+          isOpen={detectionModalOpen}
+          onClose={() => setDetectionModalOpen(false)}
+          result={result}
+          onChangeSelection={handleChangeSelection}
+          onScanQR={() => {
+            setDetectionModalOpen(false);
+            setQrScannerModalOpen(true);
+          }}
+        />
+
         {/* QR Scanner Modal */}
         {qrScannerModalOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -427,7 +419,8 @@ const UserRecycle = () => {
                     }
                     setScannedBinId(binId);
                     setQrScannerModalOpen(false);
-                    setConfirmationModalOpen(true);
+                    setDetectionModalOpen(false); // Close detection modal
+                    setConfirmationModalOpen(true); // Open confirmation modal
                   }}
                   onClose={() => setQrScannerModalOpen(false)}
                 />
@@ -442,6 +435,14 @@ const UserRecycle = () => {
             <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setConfirmationModalOpen(false)} />
             <div className="relative w-full max-w-2xl">
               <SpotlightCard className="bg-linear-to-br from-green-500/10 to-green-600/5 backdrop-blur-xl border border-green-500/20 rounded-xl p-8">
+                <button
+                  onClick={handleReject}
+                  className="absolute top-4 right-4 z-10 p-2 bg-white/10 hover:bg-white/20 rounded-lg transition-all duration-200"
+                >
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
                 <Confirmation
                   result={result}
                   binId={scannedBinId}
@@ -514,79 +515,6 @@ const UserRecycle = () => {
               </div>
             </div>
           </SpotlightCard>
-        )}
-
-        {/* Detection Result */}
-        {display && !manualMode && result && (
-          <div className="space-y-6 mb-8">
-            <SpotlightCard className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-8">
-              <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-                <svg className="w-7 h-7 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                Detection Result
-              </h2>
-              
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                <div className="p-6 bg-blue-500/10 border border-blue-500/20 rounded-xl">
-                  <p className="text-sm text-blue-300/70 uppercase tracking-wide font-medium mb-2">Waste Type</p>
-                  <p className="text-2xl font-bold text-white">{result.waste_type}</p>
-                </div>
-                
-                <div className="p-6 bg-purple-500/10 border border-purple-500/20 rounded-xl">
-                  <p className="text-sm text-purple-300/70 uppercase tracking-wide font-medium mb-2">Confidence</p>
-                  <p className="text-2xl font-bold text-white">{(result.confidence * 100).toFixed(1)}%</p>
-                </div>
-                
-                <div className="p-6 bg-green-500/10 border border-green-500/20 rounded-xl">
-                  <p className="text-sm text-green-300/70 uppercase tracking-wide font-medium mb-2">Points to Earn</p>
-                  <p className="text-2xl font-bold text-green-400">{result.points_to_earn ?? result.estimated_value ?? 0}</p>
-                </div>
-              </div>
-
-              {result.confidence < 0.40 && (
-                <div className="p-5 bg-yellow-500/10 border border-yellow-500/30 rounded-xl mb-6">
-                  <div className="flex gap-4">
-                    <svg className="w-6 h-6 text-yellow-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                    </svg>
-                    <div className="flex-1">
-                      <p className="font-semibold text-yellow-300 mb-1">Low Confidence Detection</p>
-                      <p className="text-sm text-yellow-200/80 mb-3">The AI is not very confident about this detection. Consider using manual selection for better accuracy.</p>
-                      <button 
-                        onClick={handleChangeSelection} 
-                        className="px-4 py-2 bg-yellow-500/20 hover:bg-yellow-500/30 border border-yellow-500/30 text-yellow-300 font-semibold rounded-lg transition-all duration-200 text-sm"
-                      >
-                        Change Selection
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* QR Scanner Button */}
-              <div>
-                <h3 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
-                  <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
-                  </svg>
-                  Scan Bin QR Code
-                </h3>
-                <p className="text-white/60 text-sm mb-4">Point your camera at the QR code on the e-waste bin</p>
-                
-                <button
-                  type="button"
-                  onClick={() => setQrScannerModalOpen(true)}
-                  className="w-full py-4 px-6 bg-linear-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-blue-500/30 hover:shadow-xl transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-3"
-                >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
-                  </svg>
-                  Scan QR Code
-                </button>
-              </div>
-            </SpotlightCard>
-          </div>
         )}
 
         {/* Map Section */}
