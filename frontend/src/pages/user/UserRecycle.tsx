@@ -247,7 +247,7 @@ const UserRecycle = () => {
       setDisplay(false);
       setScannedBinId(null);
       setConfirmationModalOpen(false);
-      navigate('/user/dashboard')
+      navigate('/user/thankyou')
     } catch (error) {
       console.error("Transaction error:", error);
       toast.error("Failed to complete transaction. Please try again.");

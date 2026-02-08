@@ -16,17 +16,18 @@ export default function QRScanner({ onScanSuccess, onClose }: Props) {
 
   const stopScan = useCallback(async () => {
     const scanner = html5QrcodeRef.current;
-    if (scanner?.isScanning) {
-      try {
-        await scanner.stop();
-      } catch (e) {
-        // ignore stop errors
-      }
-      scanner.clear();
-      html5QrcodeRef.current = null;
-    }
+    if (!scanner) return;
+    html5QrcodeRef.current = null; // clear ref immediately so we don't double-stop
     setIsScanning(false);
     setCameraReady(false);
+    try {
+      await scanner.stop();
+    } catch (_) {
+      // "Cannot stop, scanner is not running" etc. - ignore
+    }
+    try {
+      scanner.clear();
+    } catch (_) {}
   }, []);
 
   const startScan = useCallback(async () => {
@@ -64,9 +65,11 @@ export default function QRScanner({ onScanSuccess, onClose }: Props) {
           aspectRatio: 1.333334,
         },
         (decodedText) => {
-          stopScan();
-          setScanned(true);
-          onScanSuccess(decodedText);
+          // Stop camera fully before closing modal so the camera light turns off
+          stopScan().then(() => {
+            setScanned(true);
+            onScanSuccess(decodedText);
+          });
         },
         () => {
           // Scan failure (no QR in frame) - ignore, keep scanning
@@ -97,9 +100,18 @@ export default function QRScanner({ onScanSuccess, onClose }: Props) {
   useEffect(() => {
     startScan();
     return () => {
-      stopScan();
+      // Unmount: stop scanner and release camera synchronously as best we can
+      const scanner = html5QrcodeRef.current;
+      if (scanner) {
+        html5QrcodeRef.current = null;
+        scanner.stop().catch(() => {}).finally(() => {
+          try {
+            scanner.clear();
+          } catch (_) {}
+        });
+      }
     };
-  }, [startScan, stopScan]);
+  }, [startScan]);
 
   if (scanned) return null;
 
@@ -176,8 +188,7 @@ export default function QRScanner({ onScanSuccess, onClose }: Props) {
 
               <button
                 onClick={() => {
-                  stopScan();
-                  onClose?.();
+                  stopScan().then(() => onClose?.());
                 }}
                 className="w-full py-3.5 sm:py-3 px-4 bg-white/5 hover:bg-white/10 active:bg-white/15 border border-white/20 text-white font-semibold rounded-lg transition-all duration-200 flex items-center justify-center gap-2 min-h-[48px] sm:min-h-[auto] touch-manipulation"
               >

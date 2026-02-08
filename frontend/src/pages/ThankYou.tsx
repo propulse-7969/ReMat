@@ -49,7 +49,7 @@ const ThankYouPage = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-black relative overflow-hidden">
+    <div className="min-h-screen bg-none relative overflow-hidden">
         <Toaster />
       {/* Animated background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 via-emerald-500/10 to-green-600/10 animate-pulse"></div>
